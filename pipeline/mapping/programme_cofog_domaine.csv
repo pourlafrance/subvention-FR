@@ -1,0 +1,58 @@
+# Mapping programme budgétaire -> division COFOG -> domaine public
+#
+# PRINCIPE DE NEUTRALITÉ :
+#   - On n'invente pas de catégories : chaque programme est rattaché à une
+#     division COFOG (classification internationale ONU/OCDE, utilisée par l'INSEE).
+#   - Le "domaine_public" n'est qu'un alias lisible d'un groupe COFOG.
+#   - Règle stricte : 1 programme -> 1 domaine. Aucun découpage subjectif.
+#   - Clé = code numérique du programme (stable d'une LFI à l'autre),
+#     jamais le libellé (reformulé chaque année).
+#
+# À VALIDER : la liste ci-dessous est un socle. Avant mise en production,
+# la régénérer depuis l'état B de la dernière LFI (Légifrance) ou la
+# nomenclature publiée sur data.gouv.fr. Voir ROADMAP.md (jalon D1).
+#
+# Colonnes : programme_code,programme_libelle,mission,cofog_division,domaine_public,note
+programme_code,programme_libelle,mission,cofog_division,domaine_public,note
+131,Création,Culture,08,Culture — création,"Artistes, spectacle vivant, arts plastiques"
+175,Patrimoines,Culture,08,Culture — patrimoine,
+361,Transmission des savoirs et démocratisation de la culture,Culture,08,Culture — transmission,
+334,Livre et industries culturelles,Médias livre et industries culturelles,08,Culture — livre & industries,
+180,Presse et médias,Médias livre et industries culturelles,08,Médias,
+115,Action audiovisuelle extérieure,Médias livre et industries culturelles,08,Médias,
+219,Sport,Sport jeunesse et vie associative,08,Sport,
+163,Jeunesse et vie associative,Sport jeunesse et vie associative,08,Jeunesse & vie associative,"Inclut le FONJEP et le soutien aux associations"
+174,"Énergie, climat et après-mines",Écologie développement et mobilité durables,05,Écologie — énergie-climat,"Frontière 04/05 : classé environnement par finalité"
+113,"Paysages, eau et biodiversité",Écologie développement et mobilité durables,05,Écologie — biodiversité,
+181,Prévention des risques,Écologie développement et mobilité durables,05,Écologie — risques,
+203,Infrastructures et services de transports,Écologie développement et mobilité durables,04,Transports,
+205,Affaires maritimes pêche et aquaculture,Écologie développement et mobilité durables,04,Affaires maritimes,
+140,Enseignement scolaire public du premier degré,Enseignement scolaire,09,Éducation,
+141,Enseignement scolaire public du second degré,Enseignement scolaire,09,Éducation,
+230,Vie de l'élève,Enseignement scolaire,09,Éducation,
+150,Formations supérieures et recherche universitaire,Recherche et enseignement supérieur,09,Enseignement supérieur,
+231,Vie étudiante,Recherche et enseignement supérieur,09,Enseignement supérieur,
+172,Recherches scientifiques et technologiques pluridisciplinaires,Recherche et enseignement supérieur,01,Recherche,"COFOG : recherche fondamentale = 01.4, pas enseignement. Choix documenté."
+142,Enseignement supérieur et recherche agricoles,Recherche et enseignement supérieur,09,Enseignement supérieur,
+304,Inclusion sociale et protection des personnes,Solidarité insertion et égalité des chances,10,Social — solidarité,"Prime d'activité, aide alimentaire, protection de l'enfance"
+157,Handicap et dépendance,Solidarité insertion et égalité des chances,10,Social — handicap,
+137,Égalité entre les femmes et les hommes,Solidarité insertion et égalité des chances,10,Social — égalité,
+177,Hébergement parcours vers le logement,Cohésion des territoires,06,Logement — hébergement,
+109,Aide à l'accès au logement,Cohésion des territoires,06,Logement — accès,
+135,Urbanisme territoires et amélioration de l'habitat,Cohésion des territoires,06,Logement — habitat,
+112,Impulsion et coordination de la politique d'aménagement du territoire,Cohésion des territoires,04,Aménagement du territoire,
+147,Politique de la ville,Cohésion des territoires,06,Politique de la ville,
+204,Prévention sécurité sanitaire et offre de soins,Santé,07,Santé,
+183,Protection maladie,Santé,07,Santé,
+102,Accès et retour à l'emploi,Travail et emploi,04,Emploi,
+103,Accompagnement des mutations économiques et développement de l'emploi,Travail et emploi,04,Emploi,
+134,Développement des entreprises et régulations,Économie,04,Économie — entreprises,
+343,Plan France Très haut débit,Économie,04,Économie — numérique,
+159,Expertise économique et prospective,Économie,04,Économie — entreprises,
+138,Emploi outre-mer,Outre-mer,04,Outre-mer,
+123,Conditions de vie outre-mer,Outre-mer,06,Outre-mer,
+154,"Économie et développement durable de l'agriculture",Agriculture alimentation forêt et affaires rurales,04,Agriculture,"Hors PAC, qui a sa propre source (ASP)"
+149,"Compétitivité et durabilité de l'agriculture",Agriculture alimentation forêt et affaires rurales,04,Agriculture,
+206,Sécurité et qualité sanitaires de l'alimentation,Agriculture alimentation forêt et affaires rurales,04,Agriculture,
+104,Intégration et accès à la nationalité française,Immigration asile et intégration,10,Immigration & intégration,
+303,Immigration et asile,Immigration asile et intégration,10,Immigration & intégration,

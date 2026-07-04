@@ -1,0 +1,54 @@
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Les données réelles vivent dans la release "donnees-latest" (publiée
+      # par data-refresh.yml), jamais dans l'historique git. S'il n'y a pas
+      # encore de release, le site part avec la démo committée (bannière
+      # d'avertissement visible — comportement fail-loud voulu).
+      - name: Récupérer les dernières données réelles
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release download donnees-latest --dir public/data --clobber --repo "$GITHUB_REPOSITORY"; then
+            echo "::notice::Données de la release 'donnees-latest' intégrées au déploiement."
+          else
+            echo "::notice::Pas de release de données : déploiement avec la démo étiquetée."
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+.venv/
+pipeline/.cache/
+# La base SQLite générée par le pipeline n'est pas versionnée par défaut :
+# elle est produite en CI. Décommentez si vous préférez la committer.
+# public/data/subventions.db

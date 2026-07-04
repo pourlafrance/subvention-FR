@@ -1,0 +1,125 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { getStats } from '../data/source.js'
+import { formatEur, formatInt, formatPct, TYPE_LABELS } from '../lib/format.js'
+import KpiCard from '../components/KpiCard.vue'
+import DomainChart from '../components/DomainChart.vue'
+import TimeSeriesChart from '../components/TimeSeriesChart.vue'
+
+const router = useRouter()
+const stats = ref(null)
+const error = ref(null)
+const q = ref('')
+
+const lastYearVolume = (s) => {
+  const arr = s?.kpi?.volume_total_annuel || []
+  return arr.length ? arr[arr.length - 1].montant : null
+}
+
+onMounted(async () => {
+  try {
+    stats.value = await getStats()
+  } catch (e) {
+    error.value = "Impossible de charger les données. Le pipeline n'a peut-être pas encore tourné."
+  }
+})
+
+function go(query) {
+  router.push({ name: 'liste', query })
+}
+function runSearch() {
+  router.push({ name: 'liste', query: q.value ? { q: q.value } : {} })
+}
+</script>
+
+<template>
+  <div v-if="error" class="empty">{{ error }}</div>
+
+  <template v-else-if="stats">
+    <h1>Où va l'argent public&nbsp;?</h1>
+    <p class="lede">
+      Cartographie des subventions versées par l'État et l'Union européenne aux associations, entreprises
+      et exploitations, à partir des seules données publiques officielles.
+    </p>
+
+    <!-- Hero honnête : part documentée -->
+    <div class="card" style="margin-top:22px">
+      <div class="label muted" style="font-size:.85rem">Part des subventions effectivement documentée dans des données ouvertes</div>
+      <div class="value num" style="font-size:2.4rem;font-weight:700;letter-spacing:-.02em;color:var(--bleu)">
+        {{ formatPct(stats.kpi.estimation.part_visible) }}
+      </div>
+      <p class="muted" style="max-width:65ch;margin:8px 0 0">
+        Le reste échappe à une publication exhaustive&nbsp;: même l'État ne dispose pas d'un recensement complet
+        des aides qu'il verse. <router-link to="/methodologie">Pourquoi&nbsp;?</router-link>
+      </p>
+    </div>
+
+    <!-- Recherche rapide -->
+    <div class="search" style="margin-top:22px">
+      <input type="text" v-model="q" placeholder="Rechercher un bénéficiaire (association, entreprise…)"
+             @keyup.enter="runSearch" aria-label="Rechercher un bénéficiaire" />
+      <button class="btn" @click="runSearch">Rechercher</button>
+    </div>
+
+    <!-- KPI cliquables -->
+    <div class="kpi-grid">
+      <KpiCard label="Associations subventionnées"
+               :value="formatInt(stats.kpi.associations.count)"
+               :sub="formatEur(stats.kpi.associations.volume_eur) + ' au total'"
+               cta="Voir les associations"
+               @activate="go({ type: 'association' })" />
+      <KpiCard label="Entreprises subventionnées"
+               :value="formatInt(stats.kpi.entreprises.count)"
+               :sub="formatEur(stats.kpi.entreprises.volume_eur) + ' au total'"
+               cta="Voir les entreprises"
+               @activate="go({ type: 'entreprise' })" />
+      <KpiCard label="Volume annuel (dernière année)"
+               :value="formatEur(lastYearVolume(stats))"
+               :sub="'Année ' + (stats.meta.annee_max || '')"
+               cta="Voir toutes les subventions"
+               @activate="go({})" />
+      <KpiCard label="Versé hors France"
+               :value="formatEur(stats.kpi.etranger.volume_eur)"
+               :sub="formatPct(stats.kpi.etranger.share) + ' du total'"
+               cta="Voir les bénéficiaires hors France"
+               @activate="go({ etranger: '1' })" />
+    </div>
+
+    <h2>Répartition par domaine</h2>
+    <p class="muted" style="margin-top:-6px">Subventions de l'État pour l'année {{ stats.meta.annee_max }}.</p>
+    <DomainChart :domaines="stats.domaines" @select="(d) => go({ domaine: d })" />
+
+    <h2>Évolution du volume annuel</h2>
+    <p class="muted" style="margin-top:-6px">
+      De {{ stats.meta.annee_min }} à {{ stats.meta.annee_max }}. Les variations reflètent aussi
+      l'élargissement progressif des données publiées, pas seulement l'effort public réel.
+    </p>
+    <TimeSeriesChart :serie="stats.kpi.volume_total_annuel" @select="(a) => go({ annee: String(a) })" />
+
+    <template v-if="stats.top_beneficiaires && stats.top_beneficiaires.length">
+      <h2>Principaux bénéficiaires</h2>
+      <p class="muted" style="margin-top:-6px">
+        Cumul sur l'ensemble de la période documentée. Personnes morales uniquement.
+      </p>
+      <div class="rows">
+        <div class="row" v-for="(b, i) in stats.top_beneficiaires" :key="b.id">
+          <div>
+            <router-link class="nom" :to="`/beneficiaire/${encodeURIComponent(b.id)}`">
+              {{ i + 1 }}. {{ b.nom }}
+            </router-link>
+            <div class="meta" style="margin-top:4px">
+              <span class="tag">{{ TYPE_LABELS[b.type] || b.type }}</span>
+            </div>
+          </div>
+          <div>
+            <div class="montant num">{{ formatEur(b.total_eur) }}</div>
+            <div class="meta num" style="text-align:right">{{ b.n }} subvention<template v-if="b.n > 1">s</template></div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </template>
+
+  <div v-else class="empty">Chargement…</div>
+</template>

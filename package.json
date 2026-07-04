@@ -1,0 +1,24 @@
+{
+  "name": "subventions-fr",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Observatoire citoyen des subventions publiques françaises — données officielles, sourcées, neutres.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "data:sample": "python3 -m pipeline.make_sample",
+    "data:build": "python3 -m pipeline.build"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.3",
+    "sql.js-httpvfs": "^0.8.12",
+    "vue": "^3.4.31",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "vite": "^5.3.3"
+  }
+}

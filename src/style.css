@@ -1,0 +1,141 @@
+:root {
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --ink: #16161d;
+  --muted: #5b5b66;
+  --faint: #8a8a93;
+  --line: #e5e2da;
+  --line-strong: #cfccc2;
+  --bleu: #000091;        /* bleu Marianne */
+  --bleu-soft: #ebebf6;
+  --rouge: #e1000f;       /* rouge Marianne, usage parcimonieux */
+  --bleu-ink: #1c1c54;
+  --radius: 8px;
+  --maxw: 1040px;
+  --sans: "Marianne", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--bleu); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.num { font-variant-numeric: tabular-nums; }
+
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+/* En-tête tricolore */
+.tricolore { display: flex; height: 4px; }
+.tricolore i { flex: 1; }
+.tricolore i:nth-child(1) { background: var(--bleu); }
+.tricolore i:nth-child(2) { background: #fff; }
+.tricolore i:nth-child(3) { background: var(--rouge); }
+
+header.site {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 10;
+}
+header.site .bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 14px 0;
+}
+header.site .brand { font-weight: 700; letter-spacing: -0.01em; color: var(--ink); font-size: 1.05rem; }
+header.site .brand small { display: block; font-weight: 400; color: var(--muted); font-size: 0.72rem; letter-spacing: 0; }
+header.site nav { display: flex; gap: 18px; flex-wrap: wrap; }
+header.site nav a { color: var(--muted); font-size: 0.9rem; }
+header.site nav a.router-link-active { color: var(--ink); font-weight: 600; }
+
+/* Bannière démo */
+.sample-banner {
+  background: #fff7ed; border-bottom: 1px solid #f3d9b8; color: #7a4a12;
+  font-size: 0.86rem; padding: 9px 0;
+}
+.sample-banner strong { color: #5a3608; }
+
+main { padding: 28px 0 60px; }
+h1 { font-size: 1.9rem; letter-spacing: -0.02em; margin: 0 0 8px; }
+h2 { font-size: 1.25rem; letter-spacing: -0.01em; margin: 36px 0 14px; }
+.lede { color: var(--muted); font-size: 1.05rem; max-width: 70ch; }
+
+/* Cartes KPI */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 18px; }
+.kpi {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; text-align: left; cursor: pointer; width: 100%;
+  font-family: inherit; transition: border-color .15s, transform .05s;
+}
+.kpi:hover { border-color: var(--bleu); }
+.kpi:active { transform: translateY(1px); }
+.kpi .label { color: var(--muted); font-size: 0.82rem; margin-bottom: 6px; }
+.kpi .value { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em; }
+.kpi .sub { color: var(--faint); font-size: 0.8rem; margin-top: 4px; }
+.kpi .cta { color: var(--bleu); font-size: 0.78rem; margin-top: 10px; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+
+/* Recherche */
+.search { display: flex; gap: 8px; flex-wrap: wrap; }
+.search input[type="text"] {
+  flex: 1; min-width: 200px; padding: 10px 12px; font-size: 1rem; font-family: inherit;
+  border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--surface); color: var(--ink);
+}
+.search input:focus, select:focus { outline: 2px solid var(--bleu); outline-offset: 1px; }
+select {
+  padding: 10px 12px; font-size: 0.95rem; font-family: inherit; color: var(--ink);
+  border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--surface);
+}
+.btn {
+  padding: 10px 16px; font-size: 0.95rem; font-family: inherit; cursor: pointer;
+  border: 1px solid var(--bleu); background: var(--bleu); color: #fff; border-radius: var(--radius);
+}
+.btn.ghost { background: transparent; color: var(--bleu); }
+
+/* Tableau / liste */
+.rows { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.row {
+  display: grid; grid-template-columns: 1fr auto; gap: 6px 16px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px;
+}
+.row .nom { font-weight: 600; }
+.row .meta { color: var(--muted); font-size: 0.85rem; }
+.row .montant { font-weight: 700; font-size: 1.05rem; text-align: right; white-space: nowrap; }
+.tag {
+  display: inline-block; font-size: 0.72rem; padding: 2px 8px; border-radius: 20px;
+  background: var(--bleu-soft); color: var(--bleu-ink); margin-right: 6px;
+}
+.tag.etranger { background: #fdeaea; color: #8a1f1f; }
+
+/* Pagination */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 22px; }
+.pagination button {
+  padding: 8px 14px; border: 1px solid var(--line-strong); background: var(--surface);
+  border-radius: var(--radius); cursor: pointer; font-family: inherit; color: var(--ink);
+}
+.pagination button:disabled { opacity: 0.4; cursor: default; }
+.pagination .info { color: var(--muted); font-size: 0.9rem; }
+
+.muted { color: var(--muted); }
+.empty { text-align: center; color: var(--muted); padding: 40px 0; }
+.chart-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+
+footer.site { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 0.85rem; }
+footer.site a { color: var(--muted); text-decoration: underline; }
+
+dl.detail { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 0; }
+dl.detail dt { color: var(--muted); }
+dl.detail dd { margin: 0; }
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.5rem; }
+  header.site nav { gap: 12px; }
+  .kpi .value { font-size: 1.4rem; }
+}

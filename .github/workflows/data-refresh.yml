@@ -1,0 +1,59 @@
+name: Rafraîchissement des données
+
+# Lance le pipeline ETL réel, publie les artefacts de données dans la release
+# "donnees-latest" (jamais dans l'historique git : la base SQLite pèse des
+# centaines de Mo), puis déclenche le déploiement Pages qui les embarque.
+# Politique fail-loud : si une source échoue, le run échoue en rouge — ce qui
+# signale honnêtement que les données ne sont pas complètes ; le site continue
+# de servir la dernière release publiée.
+#
+# Connecteurs validés sur données réelles (ROADMAP D2) : SCDL associations,
+# jaune budgétaire, PAC (portail ASP), CORDIS. Au volume réel, le front bascule
+# automatiquement sur SQLite/httpvfs (stats.meta.detail, ROADMAP P2).
+# Rotation annuelle à prévoir : identifiants du cube PAC et millésime du jaune
+# (voir les docstrings des connecteurs).
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'   # tous les lundis 04:00 UTC (Chorus se met à jour le lundi)
+  workflow_dispatch:
+
+permissions:
+  contents: write   # publier la release de données
+  actions: write    # déclencher deploy.yml
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # Cache inter-runs des fiches SIRENE déjà enrichies (pipeline/.cache/) :
+      # évite de re-interroger l'API Recherche d'entreprises chaque semaine.
+      - uses: actions/cache@v4
+        with:
+          path: pipeline/.cache
+          key: pipeline-cache-${{ github.run_id }}
+          restore-keys: pipeline-cache-
+      - run: pip install -r pipeline/requirements.txt
+      - name: Construire les données réelles
+        run: python -m pipeline.build
+      - name: Publier les données en release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view donnees-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create donnees-latest --repo "$GITHUB_REPOSITORY" \
+              --title "Données consolidées (dernier run)" \
+              --notes "Artefacts produits par le pipeline (voir data-refresh.yml). Écrasés à chaque run réussi."
+          gh release upload donnees-latest public/data/stats.json public/data/subventions.db \
+            --clobber --repo "$GITHUB_REPOSITORY"
+          if [ -f public/data/subventions.json ]; then
+            gh release upload donnees-latest public/data/subventions.json --clobber --repo "$GITHUB_REPOSITORY"
+          fi
+      - name: Déclencher le déploiement Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY"

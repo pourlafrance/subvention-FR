@@ -1,0 +1,24 @@
+# Dépenses TOTALES des administrations publiques françaises par division COFOG.
+# Sert de PLAFOND de cohérence (pipeline/checks.py) : le volume de subventions
+# documenté ici ne peut pas dépasser la dépense publique totale de la fonction.
+#
+# Source officielle : Eurostat, dataset gov_10a_exp (« Dépenses des
+# administrations publiques par fonction (CFAP) »), périmètre S13 (toutes APU
+# consolidées), na_item=TE (dépense totale), unité M€ courants, geo=FR.
+# API publique (paramètre cofog99 répété par division, format JSON, lang=fr) :
+#   https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/gov_10a_exp
+# Valeurs relevées le 2026-07-03 — année 2024, flag Eurostat « p » (provisoire).
+# Ces chiffres sont ceux des comptes nationaux (INSEE) transmis à Eurostat.
+#
+# Colonnes : cofog_division,libelle,depense_apu_meur,annee_reference
+cofog_division,libelle,depense_apu_meur,annee_reference
+01,Services généraux des administrations publiques,181103.2,2024
+02,Défense,54199.0,2024
+03,Ordre et sécurité publics,52113.0,2024
+04,Affaires économiques,166072.8,2024
+05,Protection de l'environnement,30285.1,2024
+06,Logements et équipements collectifs,42128.6,2024
+07,Santé,261156.3,2024
+08,"Loisirs, culture et culte",43067.6,2024
+09,Enseignement,148639.6,2024
+10,Protection sociale,693028.8,2024
