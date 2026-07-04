@@ -28,19 +28,32 @@ function ftsQuery(text) {
   return tokens.map((t) => `"${t}"*`).join(' ')
 }
 
+// Doit rester aligné avec pipeline/split_db.py (CHUNK, SUFFIXE).
+const SERVER_CHUNK = 1024 * 1024
+
 export async function createSqliteSource(BASE, stats) {
   const worker = await createDbWorker(
     [{
       from: 'inline',
       config: {
-        serverMode: 'full',
+        // Mode chunké avec requestChunkSize == serverChunkSize : chaque
+        // requête couvre EXACTEMENT un fichier de chunk. Indispensable sur
+        // GitHub Pages, dont la CDN sert les Range partiels dans l'espace
+        // des octets gzip (inexploitables) mais renvoie le flux complet
+        // quand la plage couvre tout le fichier. Voir sqlite.adapter.md.
+        serverMode: 'chunked',
         // URL absolue, résolue dans le contexte de la PAGE : le worker vit
         // sous /assets/ et résoudrait une URL relative depuis là (404).
-        url: new URL(`${BASE}data/subventions.db`, window.location.href).toString(),
-        requestChunkSize: 1024,
-        // Taille exacte fournie par le pipeline : le gzip de GitHub Pages
-        // fausse la détection par HEAD (voir sqlite.adapter.md).
-        fileLength: stats?.meta?.db_bytes,
+        urlPrefix: new URL(`${BASE}data/db/subventions.db.`, window.location.href).toString(),
+        suffixLength: 4,
+        serverChunkSize: SERVER_CHUNK,
+        requestChunkSize: SERVER_CHUNK,
+        // Taille exacte fournie par le pipeline : le HEAD renvoie la taille
+        // compressée, inutilisable.
+        databaseLengthBytes: stats?.meta?.db_bytes,
+        // Anti-mélange de versions : les chunks d'un nouveau run ne doivent
+        // jamais être servis depuis le cache CDN de l'ancien.
+        cacheBust: String(stats?.meta?.db_bytes || ''),
       },
     }],
     workerUrl,

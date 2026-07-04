@@ -18,18 +18,29 @@ l'implémentation selon `stats.meta.detail` écrit par le pipeline :
   affiché « 10 000+ ») ; l'export CSV à 5 000 lignes avec avertissement.
   Ces plafonds ne touchent jamais les KPI.
 
-## Pièges GitHub Pages (traités)
+## Pièges GitHub Pages (traités — appris sur le premier déploiement réel)
 
-- **fileLength explicite** : le pipeline écrit `meta.db_bytes` dans stats.json,
-  transmis à `createDbWorker` (le gzip de Pages fausse la détection par HEAD).
-- **URL absolue** : l'URL de la base est résolue dans le contexte de la page
+- **La CDN de Pages sert les Range dans l'espace des octets COMPRESSÉS**
+  (constaté 2026-07 : tout est gzippé, `Content-Range …/<taille gzip>`, corps
+  = tranche du flux gzip). Les navigateurs envoyant toujours
+  `Accept-Encoding: gzip`, les Range partiels sont inexploitables
+  (« database disk image is malformed »). MAIS une plage couvrant tout le
+  fichier renvoie le flux gzip complet, décodé correctement. D'où la parade :
+  la base est **découpée en fichiers de 1 Mo** (`pipeline/split_db.py`, au
+  déploiement) et le worker est configuré en mode chunké avec
+  `requestChunkSize == serverChunkSize` — chaque requête couvre exactement un
+  fichier. Validé contre un simulateur reproduisant ce comportement.
+- **cacheBust par version des données** : sans lui, la CDN pourrait mélanger
+  des chunks de deux runs différents (corruption silencieuse).
+- **databaseLengthBytes explicite** : le pipeline écrit `meta.db_bytes` dans
+  stats.json (le HEAD renvoie la taille compressée, inutilisable).
+- **URL absolue** : l'URL des chunks est résolue dans le contexte de la page
   (`new URL(..., location.href)`) — le worker vit sous `/assets/` et casserait
   une URL relative.
 - `page_size = 1024` appliqué par `build_sqlite.py`.
 - La base n'est **pas committée** : publiée en release `donnees-latest` par
-  `data-refresh.yml`, téléchargée au build par `deploy.yml` (limite git 100 Mo
-  contournée, historique préservé). Limite de taille restante : ~1 Go (soft)
-  par site Pages — découpage en chunks à prévoir bien au-delà (ROADMAP P3).
+  `data-refresh.yml`, téléchargée puis découpée au build par `deploy.yml`
+  (limite git 100 Mo contournée, historique préservé).
 
 ## Tester en local
 

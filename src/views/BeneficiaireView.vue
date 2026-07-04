@@ -9,10 +9,16 @@ import YearSparkline from '../components/YearSparkline.vue'
 const route = useRoute()
 const data = ref(null)
 const loading = ref(true)
+const error = ref(null)
 
 async function load() {
   loading.value = true
-  data.value = await getBeneficiaire(decodeURIComponent(route.params.id))
+  error.value = null
+  try {
+    data.value = await getBeneficiaire(decodeURIComponent(route.params.id))
+  } catch (e) {
+    error.value = 'Impossible de charger cette fiche. Réessayez dans un instant.'
+  }
   loading.value = false
 }
 onMounted(load)
@@ -21,6 +27,7 @@ watch(() => route.params.id, load)
 
 <template>
   <div v-if="loading" class="empty">Chargement…</div>
+  <div v-else-if="error" class="empty">{{ error }}</div>
   <div v-else-if="!data" class="empty">Bénéficiaire introuvable.</div>
 
   <template v-else>

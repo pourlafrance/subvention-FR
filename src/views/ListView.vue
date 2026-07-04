@@ -30,12 +30,20 @@ function fromRoute() {
   page.value = Number(route.query.page) || 1
 }
 
+const error = ref(null)
+
 async function run() {
   loading.value = true
-  result.value = await search({
-    q: q.value, type: type.value, domaine: domaine.value,
-    annee: annee.value, etranger: etranger.value, page: page.value, pageSize,
-  })
+  error.value = null
+  try {
+    result.value = await search({
+      q: q.value, type: type.value, domaine: domaine.value,
+      annee: annee.value, etranger: etranger.value, page: page.value, pageSize,
+    })
+  } catch (e) {
+    result.value = { items: [], total: 0 }
+    error.value = 'Impossible de charger les résultats. Réessayez dans un instant.'
+  }
   loading.value = false
 }
 
@@ -132,6 +140,7 @@ watch(() => route.query, async () => { fromRoute(); await run() })
   </div>
 
   <div v-if="loading" class="empty">Chargement…</div>
+  <div v-else-if="error" class="empty">{{ error }}</div>
   <div v-else-if="!result.items.length" class="empty">
     Aucune subvention ne correspond à ces critères.
   </div>

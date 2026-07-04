@@ -17,6 +17,7 @@ from .aggregate import build_stats
 from .classify import classify_all, load_mapping
 from .normalize import make_record
 from .build_sqlite import build as build_sqlite
+from .split_db import split as split_db
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "data")
 random.seed(42)
@@ -80,6 +81,7 @@ def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     records = classify_all(gen_records(), load_mapping())
     info = build_sqlite(records, os.path.join(OUT_DIR, "subventions.db"))
+    split_db(os.path.join(OUT_DIR, "subventions.db"))  # chunks pour le mode SQLite
     stats = build_stats(records, is_sample=True, sources=[{"nom": "DONNÉES DE DÉMONSTRATION", "n": len(records)}])
     stats["meta"]["detail"] = "json"  # la démo reste servie en JSON
     stats["meta"]["db_bytes"] = info["bytes"]

@@ -32,6 +32,12 @@ jobs:
           else
             echo "::notice::Pas de release de données : déploiement avec la démo étiquetée."
           fi
+      # La base est servie en chunks de 1 Mo (contrainte gzip de la CDN Pages,
+      # voir pipeline/split_db.py) ; le monolithe n'est pas déployé.
+      - name: Découper la base en chunks
+        run: |
+          python3 -m pipeline.split_db public/data/subventions.db
+          rm public/data/subventions.db
       - uses: actions/setup-node@v4
         with:
           node-version: 20

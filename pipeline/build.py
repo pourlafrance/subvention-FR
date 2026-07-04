@@ -22,6 +22,7 @@ from .enrich import enrich_all
 from .normalize import valid
 from .sources import aides_etat, associations, europe_cordis, jaune_associations, pac
 from .build_sqlite import build as build_sqlite
+from .split_db import split as split_db
 
 OUT_DIR = os.path.join(os.path.dirname(__file__), "..", "public", "data")
 JSON_MAX_RECORDS = 50_000  # au-delà, on s'appuie sur SQLite (httpvfs) plutôt que JSON
@@ -93,6 +94,8 @@ def main() -> int:
     info = build_sqlite(records, os.path.join(OUT_DIR, "subventions.db"))
     notice(f"subventions.db : {info['subventions']} subventions, "
            f"{info['beneficiaires']} bénéficiaires, {round(info['bytes']/1e6, 1)} Mo")
+    chunks = split_db(os.path.join(OUT_DIR, "subventions.db"))
+    notice(f"Base découpée en {chunks['chunks']} chunks (contrainte gzip GitHub Pages)")
 
     detail_json = len(records) <= JSON_MAX_RECORDS
     stats = build_stats(records, is_sample=False, sources=used_sources)

@@ -105,9 +105,10 @@ et D3 (aides d'État TAM). Le site est **publiable tel quel** (avec sa bannière
   fiche par clé, bascule automatique via `stats.meta.detail`. Validé en navigateur headless derrière
   un serveur Range réel (voir [`src/data/sqlite.adapter.md`](./src/data/sqlite.adapter.md)).
   Comptages en ligne plafonnés et signalés (« 10 000+ ») — les KPI restent précalculés en CI sur tout.
-- 🟡 **P3** — `fileLength` explicite fait (`meta.db_bytes`) ; la limite git 100 Mo est contournée
-  (base publiée en release, pas committée). Reste : découpage en chunks si la base approche le
-  soft-limit ~1 Go de Pages.
+- ✅ **P3** — Résolu après diagnostic sur le premier déploiement réel : la CDN de Pages sert les
+  Range dans l'espace gzip (inexploitables en partiel) → base découpée en chunks de 1 Mo
+  (`split_db.py`) requêtés en fichiers entiers, cacheBust par version, `db_bytes` explicite.
+  Détail complet dans [`src/data/sqlite.adapter.md`](./src/data/sqlite.adapter.md).
 
 ### Jalon F — Fonctionnalités
 - ⬜ **F1** — Estimation « petits budgets » plus fine et mieux sourcée (actuellement ratio macro grossier) ;
