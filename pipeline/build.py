@@ -20,7 +20,7 @@ from .checks import check_cofog
 from .classify import classify_all, load_mapping
 from .enrich import enrich_all
 from .normalize import valid
-from .sources import aides_etat, associations, europe_cordis, jaune_associations, pac
+from .sources import agence_ademe, aides_etat, associations, europe_cordis, jaune_associations, pac
 from .build_sqlite import build as build_sqlite
 from .split_db import split as split_db
 
@@ -33,6 +33,7 @@ SOURCES = [
     ("PAC (portail ASP)", pac.fetch),
     ("Aides d'État (TAM)", aides_etat.fetch),
     ("Horizon Europe (CORDIS)", europe_cordis.fetch),
+    ("ADEME", agence_ademe.fetch),
 ]
 
 

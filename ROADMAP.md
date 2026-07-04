@@ -88,9 +88,16 @@ et D3 (aides d'État TAM). Le site est **publiable tel quel** (avec sa bannière
   redéploiement automatique, la bannière démo disparaît. **Débloqué** (P2 fait) — il reste à lancer
   le run et à surveiller durée/mémoire du job (PAC = 1,3 M lignes).
 - ⬜ **D5** — **Kohesio** (FEDER/FSE+) : API REST validée (France = entité `Q20`, 63 304 projets,
-  19 585 bénéficiaires agrégés). Voie : CSV national `FR-pp21-27-latest.csv` via `/api/data/object`
-  (endpoint instable au test — 504 —, prévoir retries) ; repli : pagination `/api/projects` (limit 500)
-  + hydratation `/api/projects/{qid}`. Parseur à valider sur le CSV réel dès l'endpoint rétabli.
+  19 585 bénéficiaires agrégés). Le CSV national `FR-pp21-27-latest.csv` via `/api/data/object` est
+  toujours en panne (retesté 2026-07-04 : 504 systématique, même sur les petits fichiers — panne du
+  backend de stockage, pas un problème de taille). Repli possible mais coûteux : pagination
+  `/api/projects` + hydratation détail par projet (~63 k appels ; les bénéficiaires n'apparaissent que
+  dans le détail). Pas de SIREN nulle part → rapprochement par nom. Retester le bulk périodiquement ;
+  parseur à valider sur le CSV réel dès l'endpoint rétabli.
+- ✅ **D8** — **ADEME** : connecteur validé en direct (28 570 aides privées, 8,1 Md€ 2021-2026,
+  SIREN 99 %, API data-fair paginée par curseur). Transferts public-public écartés et comptés
+  (10 436). FranceAgriMer : rien d'exploitable par bénéficiaire sur data.gouv (vérifié) ; agences de
+  l'eau : pas de CSV direct, portails propres à explorer.
 - ⬜ **D6** — Automatiser la **rotation annuelle** des sources à millésime (cube PAC, jaune budgétaire) :
   découverte des identifiants au lieu de constantes en dur.
 - ⬜ **D7** — Traîne SCDL (audit du 1er run réel, 2026-07) : 36/53 jeux lus. Restent ~5 publiants

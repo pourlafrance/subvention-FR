@@ -5,6 +5,7 @@ import { search, searchAll, getFilters } from '../data/source.js'
 import { formatEur, TYPE_LABELS } from '../lib/format.js'
 import SubventionRow from '../components/SubventionRow.vue'
 import Pagination from '../components/Pagination.vue'
+import LoadingState from '../components/LoadingState.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -140,7 +141,7 @@ watch(() => route.query, async () => { fromRoute(); await run() })
     </div>
   </div>
 
-  <div v-if="loading" class="empty">Chargement…</div>
+  <LoadingState v-if="loading" message="Recherche dans la base…" />
   <div v-else-if="error" class="empty">{{ error }}</div>
   <div v-else-if="!result.items.length" class="empty">
     Aucune subvention ne correspond à ces critères.

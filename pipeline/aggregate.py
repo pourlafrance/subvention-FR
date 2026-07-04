@@ -18,6 +18,16 @@ IPC_PATH = os.path.join(os.path.dirname(__file__), "mapping", "ipc_insee.csv")
 REF_TOTAL_ENTREPRISES_EUR = 211_000_000_000
 REF_TOTAL_ASSOCIATIONS_EUR = 23_000_000_000
 
+# Libellés lisibles des sources pour les agrégats (clé = source_kind).
+SOURCE_LABELS = {
+    "association": "Données essentielles (SCDL)",
+    "jaune_associations": "Jaune budgétaire (État)",
+    "pac": "PAC (FEAGA/FEADER)",
+    "aide_etat_entreprise": "Aides d'État (TAM)",
+    "ue_recherche": "Horizon Europe",
+    "agence_ademe": "ADEME",
+}
+
 
 def _sum(records, pred):
     return sum(r["montant"] for r in records if pred(r) and r["montant"])
@@ -76,11 +86,27 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
             entry["montant_constant"] = round(par_annee[a] * ipc_ref / ipc[a], 2)
         volume_annuel.append(entry)
 
-    # Répartition par domaine (année de référence, pour le graphe d'accueil)
+    # Ventilation par source : une courbe « total » serait trompeuse quand la
+    # couverture varie d'une année à l'autre (le jaune ne couvre que 2023, la
+    # PAC 2024-2025…). Le graphe d'accueil empile ces séries pour rendre
+    # l'élargissement des données visible au lieu de le confondre avec une
+    # évolution de l'effort public.
+    par_source_annee = defaultdict(lambda: defaultdict(float))
+    for r in records:
+        if r["annee"] and r["montant"]:
+            libelle = SOURCE_LABELS.get(r.get("source_kind"), r.get("source") or "Autre")
+            par_source_annee[libelle][r["annee"]] += r["montant"]
+    volume_par_source = [
+        {"source": src, "serie": [{"annee": a, "montant": round(m, 2)}
+                                  for a, m in sorted(vals.items())]}
+        for src, vals in sorted(par_source_annee.items())
+    ]
+
+    # Répartition par domaine sur TOUTE la période documentée : avec une
+    # couverture hétérogène (le jaune ne couvre que 2023, la PAC 2024-2025…),
+    # ancrer sur une seule année masquerait la diversité réelle des domaines.
     dom = defaultdict(lambda: {"volume_eur": 0.0, "count": 0, "cofog": ""})
     for r in records:
-        if annee_ref and r["annee"] != annee_ref:
-            continue
         d = r["domaine"] or "Non classé"
         dom[d]["volume_eur"] += r["montant"] or 0
         dom[d]["count"] += 1
@@ -151,6 +177,7 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
             "associations": {"count": count_benef(assos), "volume_eur": round(visible_asso, 2)},
             "entreprises": {"count": count_benef(ents), "volume_eur": round(visible_ent, 2)},
             "volume_total_annuel": volume_annuel,
+            "volume_par_source": volume_par_source,
             "etranger": {
                 "volume_eur": round(vol_etranger, 2),
                 "share": round(vol_etranger / vol_total, 4) if vol_total else 0,

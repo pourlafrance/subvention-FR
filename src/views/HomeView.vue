@@ -6,6 +6,7 @@ import { formatEur, formatInt, formatPct, TYPE_LABELS } from '../lib/format.js'
 import KpiCard from '../components/KpiCard.vue'
 import DomainChart from '../components/DomainChart.vue'
 import TimeSeriesChart from '../components/TimeSeriesChart.vue'
+import LoadingState from '../components/LoadingState.vue'
 
 const router = useRouter()
 const stats = ref(null)
@@ -91,15 +92,17 @@ function runSearch() {
     </div>
 
     <h2>Répartition par domaine</h2>
-    <p class="muted" style="margin-top:-6px">Subventions documentées pour l'année {{ anneeRef(stats) }}.</p>
+    <p class="muted" style="margin-top:-6px">Ensemble de la période documentée. Domaines dérivés de la classification COFOG.</p>
     <DomainChart :domaines="stats.domaines" @select="(d) => go({ domaine: d })" />
 
-    <h2>Évolution du volume annuel</h2>
+    <h2>Évolution du volume annuel, par source</h2>
     <p class="muted" style="margin-top:-6px">
-      De {{ stats.meta.annee_min }} à {{ stats.meta.annee_max }}. Les variations reflètent aussi
-      l'élargissement progressif des données publiées, pas seulement l'effort public réel.
+      Les variations reflètent d'abord l'élargissement progressif des données publiées
+      (chaque source ne couvre que certains exercices), pas seulement l'effort public réel.
     </p>
-    <TimeSeriesChart :serie="stats.kpi.volume_total_annuel" @select="(a) => go({ annee: String(a) })" />
+    <TimeSeriesChart :serie="stats.kpi.volume_total_annuel"
+                     :par-source="stats.kpi.volume_par_source || []"
+                     @select="(a) => go({ annee: String(a) })" />
 
     <template v-if="stats.top_beneficiaires && stats.top_beneficiaires.length">
       <h2>Principaux bénéficiaires</h2>
@@ -125,5 +128,5 @@ function runSearch() {
     </template>
   </template>
 
-  <div v-else class="empty">Chargement…</div>
+  <LoadingState v-else />
 </template>

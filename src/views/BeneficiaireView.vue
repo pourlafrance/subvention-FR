@@ -5,6 +5,7 @@ import { getBeneficiaire } from '../data/source.js'
 import { formatEurFull, formatEur, TYPE_LABELS } from '../lib/format.js'
 import SubventionRow from '../components/SubventionRow.vue'
 import YearSparkline from '../components/YearSparkline.vue'
+import LoadingState from '../components/LoadingState.vue'
 
 const route = useRoute()
 const data = ref(null)
@@ -27,7 +28,7 @@ watch(() => route.params.id, load)
 </script>
 
 <template>
-  <div v-if="loading" class="empty">Chargement…</div>
+  <LoadingState v-if="loading" message="Chargement de la fiche…" />
   <div v-else-if="error" class="empty">{{ error }}</div>
   <div v-else-if="!data" class="empty">Bénéficiaire introuvable.</div>
 

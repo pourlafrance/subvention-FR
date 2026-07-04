@@ -20,6 +20,9 @@ DEFAULTS = {
     "aide_etat_entreprise": ("04", "Économie — entreprises"),
     # Horizon Europe : R&D appliquée aux affaires économiques (COFOG 04.8).
     "ue_recherche": ("04", "Recherche et innovation — UE"),
+    # ADEME : protection de l'environnement (COFOG 05) — approximation
+    # assumée, une partie des aides relève de l'énergie (04).
+    "agence_ademe": ("05", "Écologie — transition (ADEME)"),
     "inconnu": ("", "Non classé"),
 }
 

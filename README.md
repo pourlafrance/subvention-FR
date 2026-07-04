@@ -46,6 +46,7 @@ unique où chacun peut&nbsp;:
 | ASP | bénéficiaires de la PAC (FEAGA/FEADER), personnes morales uniquement |
 | Commission européenne — TAM | aides d'État aux entreprises > 500 000 € |
 | Commission européenne — CORDIS | financements Horizon Europe aux entreprises françaises |
+| ADEME (data.ademe.fr) | aides à la transition écologique, personnes morales privées |
 | INSEE — SIRENE | validation et enrichissement des fiches bénéficiaires |
 
 Méthode, périmètre et limites assumées&nbsp;: page **Méthodologie** du site,
