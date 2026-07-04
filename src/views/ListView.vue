@@ -41,6 +41,7 @@ async function run() {
       annee: annee.value, etranger: etranger.value, page: page.value, pageSize,
     })
   } catch (e) {
+    console.error('search:', e)
     result.value = { items: [], total: 0 }
     error.value = 'Impossible de charger les résultats. Réessayez dans un instant.'
   }

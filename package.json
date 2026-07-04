@@ -5,6 +5,7 @@
   "description": "Observatoire citoyen des subventions publiques françaises — données officielles, sourcées, neutres.",
   "type": "module",
   "scripts": {
+    "postinstall": "node scripts/patch-sqljs-httpvfs.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

@@ -17,6 +17,7 @@ async function load() {
   try {
     data.value = await getBeneficiaire(decodeURIComponent(route.params.id))
   } catch (e) {
+    console.error('getBeneficiaire:', e)
     error.value = 'Impossible de charger cette fiche. Réessayez dans un instant.'
   }
   loading.value = false
