@@ -15,6 +15,28 @@
     retracées bénéficiaire par bénéficiaire&nbsp;; les deux dernières, non.
   </p>
 
+  <h2 id="financement">D'où vient l'argent des subventions&nbsp;?</h2>
+  <p>
+    Des ressources publiques, c'est-à-dire pour l'essentiel <strong>des prélèvements payés par les
+    Français</strong>&nbsp;: impôts (TVA, impôt sur le revenu, impôt sur les sociétés…), taxes et
+    cotisations. Deux précisions importantes&nbsp;:
+  </p>
+  <ul>
+    <li><strong>Une partie est financée par l'emprunt.</strong> Le budget de l'État est en déficit chaque
+      année depuis le milieu des années 1970&nbsp;: une fraction des dépenses — subventions comprises —
+      est donc payée par la dette, c'est-à-dire par les contribuables de demain.</li>
+    <li><strong>Les aides européennes</strong> (PAC, fonds structurels, Horizon Europe) viennent du budget
+      de l'Union, lui-même alimenté par les contributions des États membres — dont la France est l'un des
+      premiers contributeurs — et par des ressources propres (droits de douane notamment).</li>
+  </ul>
+  <p>
+    En revanche, il est <strong>impossible de dire quel impôt finance quelle subvention</strong>&nbsp;: le
+    principe d'<strong>universalité budgétaire</strong> (LOLF) interdit d'affecter une recette à une
+    dépense — toutes les recettes se fondent dans un pot commun. C'est pourquoi ce site rattache chaque
+    subvention à son <em>programme budgétaire</em> (ce que finance l'argent), jamais à un impôt
+    (d'où il vient)&nbsp;: personne ne peut faire ce lien, pas même l'État.
+  </p>
+
   <h2 id="niche-fiscale">Qu'appelle-t-on une «&nbsp;niche fiscale&nbsp;»&nbsp;?</h2>
   <p>
     Une niche fiscale — le terme officiel est <strong>dépense fiscale</strong> — est une exception

@@ -21,7 +21,8 @@ onMounted(async () => { try { meta.value = (await getStats()).meta } catch (e) {
         est affichée comme telle, jamais masquée.</dd>
       <dt>Relier à un impôt</dt>
       <dd>Le principe d'universalité budgétaire (non-affectation des recettes, LOLF) rend impossible de relier
-        une subvention à une taxe précise&nbsp;: l'argent public est fongible. On rattache au mieux à un programme budgétaire.</dd>
+        une subvention à une taxe précise&nbsp;: l'argent public est fongible. On rattache au mieux à un programme
+        budgétaire. <router-link :to="{ path: '/explications', hash: '#financement' }">D'où vient l'argent&nbsp;?</router-link></dd>
       <dt>Dire qui a voté</dt>
       <dd>Le Parlement vote le budget par mission, pas subvention par subvention. Les subventions des collectivités
         relèvent de délibérations éparses. On indique l'autorité versante, pas un vote nominatif par ligne.</dd>
