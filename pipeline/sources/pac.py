@@ -32,7 +32,7 @@ import re
 
 import requests
 
-from ..normalize import make_record, to_year
+from ..normalize import dept_from_insee, make_record, to_year
 
 BASE = "https://reporting.lda.asp-public.fr/Reporting/api"
 # EF 2025 — cube « Paiements EF 2025 agrégés public - CSV » (à faire tourner
@@ -127,6 +127,7 @@ def fetch() -> list[dict]:
                 financeur_type="ue",
                 financeur_nom=f"PAC — {fonds} (via ASP)",
                 commune=(values.get("codepostal libellecommune") or "").split(" - ")[-1],
+                departement=dept_from_insee(values.get("code insee")),
                 pays="FR",
                 source=SOURCE_NAME,
                 source_url=SOURCE_URL,

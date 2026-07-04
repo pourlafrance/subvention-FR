@@ -134,6 +134,13 @@ et D3 (aides d'État TAM). Le site est **publiable tel quel** (avec sa bannière
 - ⬜ **F6** — Affiner la nationalité « hors France » (aujourd'hui : pays d'enregistrement ; le capital reste hors de portée).
 - ✅ **F7** — Top 10 bénéficiaires sur l'accueil (`top_beneficiaires` dans stats.json).
 - ✅ **F8** — Sparkline des montants par année sur la fiche bénéficiaire (SVG, sans dépendance).
+- ✅ **F9** — Carte de France par département (siège du bénéficiaire) : extraction du département dans
+  chaque connecteur (code INSEE jaune/PAC, natif ADEME, code postal CORDIS, SIRENE en complément),
+  taux de géolocalisation affiché. Géométrie IGN/INSEE 2018 committée en SVG (`src/assets/`).
+- ✅ **F10** — Décomposition de « l'argent qui sort sans bénéficiaire » : table des dépenses fiscales
+  versionnée (`mapping/depenses_fiscales_plf2023.csv`, 465 dispositifs, ~53 Md€ chiffrés côté
+  entreprises) affichée sur l'accueil et expliquée en méthodo. À NOTER : le PLF 2023 est le dernier
+  millésime machine-readable — les suivants ne paraissent qu'en PDF (recul de transparence documenté).
 
 ### Jalon Q — Qualité & gouvernance
 - 🟡 **Q1** — Annotations de diagnostic enrichies : compteurs par source, par jeu SCDL, enrichissement

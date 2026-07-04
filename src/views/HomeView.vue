@@ -6,6 +6,7 @@ import { formatEur, formatInt, formatPct, TYPE_LABELS } from '../lib/format.js'
 import KpiCard from '../components/KpiCard.vue'
 import DomainChart from '../components/DomainChart.vue'
 import TimeSeriesChart from '../components/TimeSeriesChart.vue'
+import FranceMap from '../components/FranceMap.vue'
 import LoadingState from '../components/LoadingState.vue'
 
 const router = useRouter()
@@ -56,7 +57,14 @@ function runSearch() {
       </div>
       <p class="muted" style="max-width:65ch;margin:8px 0 0">
         Le reste échappe à une publication exhaustive&nbsp;: même l'État ne dispose pas d'un recensement complet
-        des aides qu'il verse. <router-link to="/methodologie">Pourquoi&nbsp;?</router-link>
+        des aides qu'il verse.
+        <template v-if="stats.kpi.estimation.depenses_fiscales">
+          À elles seules, les niches fiscales aux entreprises représentent
+          <strong class="num">{{ formatEur(stats.kpi.estimation.depenses_fiscales.total_entreprises_eur) }}</strong>
+          par an ({{ stats.kpi.estimation.depenses_fiscales.n_dispositifs }} dispositifs)&nbsp;:
+          leur coût est connu, mais <strong>aucun bénéficiaire n'est publié</strong>.
+        </template>
+        <router-link to="/methodologie">Pourquoi&nbsp;?</router-link>
       </p>
     </div>
 
@@ -94,6 +102,14 @@ function runSearch() {
     <h2>Répartition par domaine</h2>
     <p class="muted" style="margin-top:-6px">Ensemble de la période documentée. Domaines dérivés de la classification COFOG.</p>
     <DomainChart :domaines="stats.domaines" @select="(d) => go({ domaine: d })" />
+
+    <template v-if="stats.departements && stats.departements.liste.length">
+      <h2>Répartition territoriale</h2>
+      <p class="muted" style="margin-top:-6px">
+        Volume documenté par département du siège du bénéficiaire, toute période confondue.
+      </p>
+      <FranceMap :data="stats.departements" />
+    </template>
 
     <h2>Évolution du volume annuel, par source</h2>
     <p class="muted" style="margin-top:-6px">

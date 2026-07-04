@@ -71,6 +71,7 @@ def _fetch_siren(siren: str) -> dict | None:
                 "est_association": bool(comp.get("est_association")),
                 "naf": res.get("activite_principale") or "",
                 "commune": siege.get("libelle_commune") or "",
+                "departement": siege.get("departement") or "",
                 "effectifs": res.get("tranche_effectif_salarie") or "",
                 "etat": res.get("etat_administratif") or "",
             }
@@ -134,6 +135,8 @@ def enrich_all(records: list[dict], max_lookups: int = MAX_LOOKUPS) -> dict:
             b["naf"] = info["naf"]
         if not b.get("commune") and info["commune"]:
             b["commune"] = info["commune"]
+        if not b.get("departement") and info.get("departement"):
+            b["departement"] = info["departement"]
         if info["effectifs"] in EFFECTIFS:
             b["effectifs"] = EFFECTIFS[info["effectifs"]]
         if info["etat"]:

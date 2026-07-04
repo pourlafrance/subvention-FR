@@ -41,6 +41,8 @@ OBJETS = [
     "Rénovation et équipement", "Programme éducatif territorial",
 ]
 COMMUNES = ["Paris", "Lyon", "Marseille", "Lille", "Bordeaux", "Nantes", "Strasbourg", "Rennes"]
+DEPARTEMENTS = {"Paris": "75", "Lyon": "69", "Marseille": "13", "Lille": "59",
+                "Bordeaux": "33", "Nantes": "44", "Strasbourg": "67", "Rennes": "35"}
 
 
 def gen_records(n_assos=45, n_ents=25):
@@ -56,7 +58,8 @@ def gen_records(n_assos=45, n_ents=25):
                 objet=random.choice(OBJETS), financeur_type="etat",
                 financeur_nom="Ministère (démonstration)", programme=prog,
                 mission=MISSIONS[prog], siren=f"{100000000 + i}", naf="9499Z",
-                commune=random.choice(COMMUNES), pays="FR",
+                commune=(commune := random.choice(COMMUNES)),
+                departement=DEPARTEMENTS[commune], pays="FR",
                 source="DÉMONSTRATION", source_url="#demo",
             ) | {"source_kind": "association"})
     for i in range(n_ents):
@@ -70,7 +73,8 @@ def gen_records(n_assos=45, n_ents=25):
                 objet="Aide à l'investissement (démonstration)", financeur_type="etat",
                 financeur_nom="État (démonstration)", programme="134",
                 mission="Économie", siren=f"{200000000 + i}", naf="2222Z",
-                commune=random.choice(COMMUNES),
+                commune=(commune := random.choice(COMMUNES)),
+                departement=DEPARTEMENTS[commune],
                 pays="DE" if etranger else "FR",
                 source="DÉMONSTRATION", source_url="#demo",
             ) | {"source_kind": "aide_etat_entreprise"})

@@ -31,7 +31,7 @@ import zipfile
 
 import requests
 
-from ..normalize import make_record, to_float, to_year
+from ..normalize import dept_from_insee, make_record, to_float, to_year
 
 ZIP_URL = "https://cordis.europa.eu/data/cordis-HORIZONprojects-csv.zip"
 LOCAL_ZIP = os.path.join(os.path.dirname(__file__), "..", ".cache", "cordis-horizon.zip")
@@ -104,6 +104,7 @@ def fetch() -> list[dict]:
             financeur_nom="Commission européenne — Horizon Europe",
             siren=_siren_from_vat(row.get("vatNumber")),
             commune=row.get("city") or "",
+            departement=dept_from_insee(row.get("postCode")),
             pays="FR",
             source=SOURCE_NAME,
             source_url=ZIP_URL,

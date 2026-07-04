@@ -64,6 +64,17 @@ onMounted(async () => { try { meta.value = (await getStats()).meta } catch (e) {
       <dt>Euros constants</dt>
       <dd>La série annuelle est aussi affichée en euros constants, déflatée par l'indice des prix à la
         consommation de l'INSEE (moyennes annuelles, base 2015). La table utilisée est versionnée dans le dépôt.</dd>
+      <dt>L'argent qui sort sans bénéficiaire</dt>
+      <dd>Une grande partie du soutien public ne passe pas par des versements nominatifs&nbsp;: les
+        <strong>dépenses fiscales</strong> (niches) coûtent ~90&nbsp;Md€/an, dont ~53&nbsp;Md€ pour les
+        252 dispositifs bénéficiant aux entreprises (chiffrage PLF&nbsp;2023, réalisation 2021, 177 dispositifs
+        chiffrés) — l'État en connaît le coût <em>par dispositif</em>,
+        mais aucun bénéficiaire n'est publié, ni souvent connu. Fait notable&nbsp;: le PLF&nbsp;2023 est le
+        <strong>dernier millésime publié en données exploitables</strong>&nbsp;; depuis, ces chiffrages ne
+        paraissent qu'en PDF.</dd>
+      <dt>Géolocalisation</dt>
+      <dd>La carte utilise le département du <em>siège</em> du bénéficiaire (codes INSEE des sources, complétés
+        par SIRENE) — pas le lieu d'usage de l'aide. Le taux de géolocalisation est affiché avec la carte.</dd>
       <dt>Co-financements</dt>
       <dd>Un même bénéficiaire peut apparaître dans plusieurs sources (État, UE, collectivités)&nbsp;: un
         co-financement peut alors être compté plusieurs fois. Ce recouvrement est mesuré et signalé, jamais

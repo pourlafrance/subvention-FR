@@ -62,6 +62,7 @@ def fetch() -> list[dict]:
             financeur_type="operateur",
             financeur_nom="ADEME",
             siren=siren,
+            departement=common.pick(row, "_siret_infos._infos_commune.code_departement"),
             pays="FR",
             source=SOURCE_NAME,
             source_url=DATASET_PAGE,

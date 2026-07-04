@@ -20,7 +20,7 @@ texte, SIREN non numériques (« NR\nCHORUS » multi-lignes), colonnes datées
 from __future__ import annotations
 
 from . import common
-from ..normalize import make_record, to_float
+from ..normalize import dept_from_insee, make_record, to_float
 
 RESOURCE_URL = "https://www.data.gouv.fr/fr/datasets/r/9527d4a9-6e81-4109-913e-830f8d5b5c86"
 DATASET_PAGE = "https://www.data.gouv.fr/fr/datasets/67884ef83b74bb8c78133b6d/"
@@ -66,6 +66,7 @@ def fetch() -> list[dict]:
             programme=common.pick(row, "Programme"),
             siren=siren if len(siren) == 9 else "",
             commune=common.pick(row, "COG : libellé", "cog libelle"),
+            departement=dept_from_insee(common.pick(row, "COG : code")),
             pays="FR",
             source=SOURCE_NAME,
             source_url=DATASET_PAGE,

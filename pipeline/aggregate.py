@@ -11,6 +11,7 @@ from collections import defaultdict
 from datetime import date
 
 IPC_PATH = os.path.join(os.path.dirname(__file__), "mapping", "ipc_insee.csv")
+DF_PATH = os.path.join(os.path.dirname(__file__), "mapping", "depenses_fiscales_plf2023.csv")
 
 # Références macro pour l'estimation de la part non publiée (à sourcer / affiner).
 # Sénat, commission d'enquête 2025 : ~211 Md€/an d'aides aux entreprises.
@@ -44,6 +45,37 @@ def load_ipc(path: str = IPC_PATH) -> dict[int, float]:
     with open(path, encoding="utf-8") as f:
         rows = [r for r in f if not r.lstrip().startswith("#")]
     return {int(row["annee"]): float(row["ipc"]) for row in csv.DictReader(rows)}
+
+
+def load_depenses_fiscales(path: str = DF_PATH) -> dict | None:
+    """Agrège la table des dépenses fiscales (voir l'en-tête du fichier).
+
+    Renvoie le total chiffré des dispositifs bénéficiant aux entreprises
+    (réalisation 2021, colonne la plus complète) — la part de l'argent qui
+    « sort » sans qu'aucun bénéficiaire ne soit publié.
+    """
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        rows = [r for r in f if not r.lstrip().startswith("#")]
+    total, n_chiffres, n_total = 0.0, 0, 0
+    for row in csv.DictReader(rows, delimiter=";"):
+        if "Entreprises" not in (row.get("beneficiaires_nature") or ""):
+            continue
+        n_total += 1
+        val = (row.get("chiffrage_2021_realisation_Meur") or "").strip()
+        try:
+            total += float(val.replace(",", "."))
+            n_chiffres += 1
+        except ValueError:
+            continue  # « - », « ε », « nc » : non sommables, comptés dans n_total
+    return {
+        "total_entreprises_eur": round(total * 1_000_000, 2),
+        "n_dispositifs": n_total,
+        "n_chiffres": n_chiffres,
+        "annee_chiffrage": 2021,
+        "source": "PLF 2023, Voies et Moyens tome II (dernier millésime machine-readable)",
+    }
 
 
 def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) -> dict:
@@ -113,6 +145,22 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
     domaines = [
         {"domaine": k, "cofog": v["cofog"], "volume_eur": round(v["volume_eur"], 2), "count": v["count"]}
         for k, v in sorted(dom.items(), key=lambda kv: -kv[1]["volume_eur"])
+    ]
+
+    # Répartition territoriale par département (siège du bénéficiaire).
+    # Couverture partielle assumée : le taux de géolocalisation est publié
+    # avec la carte, jamais un total présenté comme exhaustif.
+    par_dept = defaultdict(lambda: {"volume_eur": 0.0, "count": 0})
+    vol_geo = 0.0
+    for r in records:
+        dept = r["beneficiaire"].get("departement")
+        if dept and r["montant"]:
+            par_dept[dept]["volume_eur"] += r["montant"]
+            par_dept[dept]["count"] += 1
+            vol_geo += r["montant"]
+    departements = [
+        {"code": k, "volume_eur": round(v["volume_eur"], 2), "count": v["count"]}
+        for k, v in sorted(par_dept.items(), key=lambda kv: -kv[1]["volume_eur"])
     ]
 
     # Top bénéficiaires (toutes années) : la question que tout visiteur se pose.
@@ -185,11 +233,18 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
                 "volume_visible_eur": round(visible_ent + visible_asso, 2),
                 "volume_estime_total_eur": estime_total,
                 "part_visible": round(part_visible, 4) if part_visible else None,
+                # Décomposition de l'invisible : les dépenses fiscales sortent
+                # sans bénéficiaire nominatif — coût connu par dispositif.
+                "depenses_fiscales": load_depenses_fiscales(),
                 "note": "Estimation : part publiée rapportée aux ordres de grandeur connus "
                         "(Sénat 2025 pour les entreprises, jaune budgétaire pour les associations).",
             },
         },
         "domaines": domaines,
+        "departements": {
+            "liste": departements,
+            "part_geolocalisee": round(vol_geo / vol_total, 4) if vol_total else 0,
+        },
         "top_beneficiaires": top_beneficiaires,
         # Valeurs de filtres précalculées sur la TOTALITÉ des données : la
         # couche SQLite ne fait jamais de DISTINCT plein-scan côté navigateur.

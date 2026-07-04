@@ -40,6 +40,25 @@ def to_year(value) -> int | None:
     return int(m.group(0)) if m else None
 
 
+def dept_from_insee(code) -> str:
+    """Département depuis un code commune INSEE (ou code postal).
+
+    97x/98x (outre-mer) -> 3 caractères ; 2A/2B (Corse, codes INSEE) -> tel
+    quel ; sinon 2 caractères. Un code postal corse « 20xxx » ne permet pas
+    de trancher 2A/2B : on renvoie vide plutôt que d'inventer.
+    """
+    code = clean_str(code).upper()
+    if not code or len(code) < 4:
+        return ""
+    if code[:2] in ("97", "98"):
+        return code[:3]
+    if code[:2] in ("2A", "2B"):
+        return code[:2]
+    if code[:2] == "20":
+        return ""
+    return code[:2] if code[:2].isdigit() else ""
+
+
 def beneficiaire_id(nom: str, siren: str = "", rna: str = "") -> str:
     """Identifiant stable d'un bénéficiaire.
 
@@ -70,6 +89,7 @@ def make_record(
     rna: str = "",
     naf: str = "",
     commune: str = "",
+    departement: str = "",
     pays: str = "FR",
     activite: str = "",
     source: str = "",
@@ -107,6 +127,7 @@ def make_record(
             "rna": clean_str(rna),
             "naf": clean_str(naf),
             "commune": clean_str(commune),
+            "departement": clean_str(departement),
             "pays": pays,
             "est_etranger": pays != "FR",
             "activite": clean_str(activite),
