@@ -55,13 +55,13 @@ function runSearch() {
       <div class="value num" style="font-size:2.4rem;font-weight:700;letter-spacing:-.02em;color:var(--bleu)">
         {{ formatPct(stats.kpi.estimation.part_visible) }}
       </div>
-      <div style="margin-top:4px;max-width:65ch">
+      <div style="margin-top:4px">
         <strong class="num">{{ formatEur(stats.kpi.estimation.volume_visible_eur) }}</strong> retracés
         ligne à ligne sur ce site, rapportés aux
         <strong class="num">~{{ formatEur(stats.kpi.estimation.volume_estime_total_eur) }}</strong> d'aides
         annuelles estimées par la commission d'enquête du Sénat (2025).
       </div>
-      <p class="muted" style="max-width:65ch;margin:10px 0 0">
+      <p class="muted" style="margin:10px 0 0">
         Ce total n'est qu'une estimation, car il n'existe aucune comptabilité exhaustive des aides
         publiques&nbsp;— même l'État ne sait pas retracer le reste.
         <template v-if="stats.kpi.estimation.depenses_fiscales">

@@ -17,8 +17,9 @@
 
   <h2 id="niche-fiscale">Qu'appelle-t-on une «&nbsp;niche fiscale&nbsp;»&nbsp;?</h2>
   <p>
-    Une niche fiscale — le terme officiel est <strong>dépense fiscale</strong> — est une exception à la
-    règle normale de l'impôt, <strong>votée par le Parlement</strong> dans la loi de finances. Au lieu de
+    Une niche fiscale — le terme officiel est <strong>dépense fiscale</strong> — est une exception
+    <strong>parfaitement légale</strong> à la règle normale de l'impôt, <strong>votée par le
+    Parlement</strong> dans la loi de finances. Au lieu de
     verser de l'argent, l'État <strong>renonce à en prélever</strong>&nbsp;: économiquement, cela revient à
     une subvention versée «&nbsp;en creux&nbsp;». Quatre formes principales&nbsp;:
   </p>
