@@ -8,12 +8,14 @@ const routes = [
   { path: '/liste', name: 'liste', component: () => import('./views/ListView.vue') },
   { path: '/beneficiaire/:id', name: 'beneficiaire', component: () => import('./views/BeneficiaireView.vue') },
   { path: '/methodologie', name: 'methodo', component: () => import('./views/MethodoView.vue') },
+  { path: '/explications', name: 'explications', component: () => import('./views/ExplicationsView.vue') },
 ]
 
 export default createRouter({
   history: createWebHashHistory(),
   routes,
-  scrollBehavior() {
+  scrollBehavior(to) {
+    if (to.hash) return { el: to.hash, top: 12 }
     return { top: 0 }
   },
 })

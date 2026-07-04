@@ -55,22 +55,27 @@ function runSearch() {
       <div class="value num" style="font-size:2.4rem;font-weight:700;letter-spacing:-.02em;color:var(--bleu)">
         {{ formatPct(stats.kpi.estimation.part_visible) }}
       </div>
-      <div style="margin-top:2px">
-        <span class="num">{{ formatEur(stats.kpi.estimation.volume_visible_eur) }}</span> documentés ici, sur
-        <strong class="num">~{{ formatEur(stats.kpi.estimation.volume_estime_total_eur) }}/an</strong>
-        d'aides <em>estimées</em> — une estimation (commission d'enquête du Sénat, 2025), pas une
-        comptabilité&nbsp;: <strong>il n'en existe pas</strong>.
+      <div style="margin-top:4px;max-width:65ch">
+        <strong class="num">{{ formatEur(stats.kpi.estimation.volume_visible_eur) }}</strong> retracés
+        ligne à ligne sur ce site, rapportés aux
+        <strong class="num">~{{ formatEur(stats.kpi.estimation.volume_estime_total_eur) }}</strong> d'aides
+        annuelles estimées par la commission d'enquête du Sénat (2025).
       </div>
-      <p class="muted" style="max-width:65ch;margin:8px 0 0">
-        Même l'État ne parvient pas à retracer le reste&nbsp;: aucun recensement exhaustif des aides versées
-        n'existe.
+      <p class="muted" style="max-width:65ch;margin:10px 0 0">
+        Ce total n'est qu'une estimation, car il n'existe aucune comptabilité exhaustive des aides
+        publiques&nbsp;— même l'État ne sait pas retracer le reste.
         <template v-if="stats.kpi.estimation.depenses_fiscales">
-          À elles seules, les niches fiscales aux entreprises représentent
+          À elles seules, les niches fiscales aux entreprises pèsent
           <strong class="num">{{ formatEur(stats.kpi.estimation.depenses_fiscales.total_entreprises_eur) }}</strong>
-          par an ({{ stats.kpi.estimation.depenses_fiscales.n_dispositifs }} dispositifs)&nbsp;:
-          leur coût est connu, mais <strong>aucun bénéficiaire n'est publié</strong>.
+          par an&nbsp;: coût connu, bénéficiaires jamais publiés.
         </template>
-        <router-link to="/methodologie">Pourquoi&nbsp;?</router-link>
+      </p>
+      <p style="margin:10px 0 0;font-size:.9rem">
+        <router-link :to="{ path: '/explications', hash: '#niche-fiscale' }">Qu'appelle-t-on une niche fiscale&nbsp;?</router-link>
+        &nbsp;·&nbsp;
+        <router-link :to="{ path: '/explications', hash: '#total-inconnu' }">Pourquoi le total est-il inconnu&nbsp;?</router-link>
+        &nbsp;·&nbsp;
+        <router-link to="/methodologie">Notre méthode</router-link>
       </p>
     </div>
 

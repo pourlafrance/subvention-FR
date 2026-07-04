@@ -28,6 +28,7 @@ onMounted(async () => {
       <nav>
         <router-link to="/">Accueil</router-link>
         <router-link to="/liste">Rechercher</router-link>
+        <router-link to="/explications">Comprendre</router-link>
         <router-link to="/methodologie">Méthodologie</router-link>
       </nav>
     </div>
