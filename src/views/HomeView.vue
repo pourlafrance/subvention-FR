@@ -12,9 +12,13 @@ const stats = ref(null)
 const error = ref(null)
 const q = ref('')
 
+// Année de référence des agrégats « dernière année » : la plus récente non
+// future (les engagements pluriannuels créent des années futures légitimes).
+const anneeRef = (s) => s?.meta?.annee_ref || s?.meta?.annee_max
 const lastYearVolume = (s) => {
   const arr = s?.kpi?.volume_total_annuel || []
-  return arr.length ? arr[arr.length - 1].montant : null
+  const entry = arr.find((e) => e.annee === anneeRef(s))
+  return entry ? entry.montant : (arr.length ? arr[arr.length - 1].montant : null)
 }
 
 onMounted(async () => {
@@ -76,7 +80,7 @@ function runSearch() {
                @activate="go({ type: 'entreprise' })" />
       <KpiCard label="Volume annuel (dernière année)"
                :value="formatEur(lastYearVolume(stats))"
-               :sub="'Année ' + (stats.meta.annee_max || '')"
+               :sub="'Année ' + (anneeRef(stats) || '')"
                cta="Voir toutes les subventions"
                @activate="go({})" />
       <KpiCard label="Versé hors France"
@@ -87,7 +91,7 @@ function runSearch() {
     </div>
 
     <h2>Répartition par domaine</h2>
-    <p class="muted" style="margin-top:-6px">Subventions de l'État pour l'année {{ stats.meta.annee_max }}.</p>
+    <p class="muted" style="margin-top:-6px">Subventions documentées pour l'année {{ anneeRef(stats) }}.</p>
     <DomainChart :domaines="stats.domaines" @select="(d) => go({ domaine: d })" />
 
     <h2>Évolution du volume annuel</h2>

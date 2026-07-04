@@ -8,6 +8,7 @@ from __future__ import annotations
 import csv
 import os
 from collections import defaultdict
+from datetime import date
 
 IPC_PATH = os.path.join(os.path.dirname(__file__), "mapping", "ipc_insee.csv")
 
@@ -38,6 +39,13 @@ def load_ipc(path: str = IPC_PATH) -> dict[int, float]:
 def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) -> dict:
     annees = sorted({r["annee"] for r in records if r["annee"]})
     annee_max = annees[-1] if annees else None
+    # Année de référence des agrégats « dernière année » : la plus récente
+    # NON future. Des années futures existent légitimement (engagements
+    # pluriannuels CORDIS/SCDL datés de l'année de début) mais ne sont pas
+    # représentatives d'un exercice — constaté au 1er run réel (KPI « 2027 »).
+    annee_courante = date.today().year
+    passees = [a for a in annees if a <= annee_courante]
+    annee_ref = passees[-1] if passees else annee_max
 
     assos = [r for r in records if r["beneficiaire"]["type"] == "association"]
     ents = [r for r in records if r["beneficiaire"]["type"] in ("entreprise", "exploitation")]
@@ -52,7 +60,7 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
         if r["annee"] and r["montant"]:
             par_annee[r["annee"]] += r["montant"]
     ipc = load_ipc()
-    ipc_ref = ipc.get(annee_max)
+    ipc_ref = ipc.get(annee_ref)
     volume_annuel = []
     for a in annees:
         entry = {"annee": a, "montant": round(par_annee[a], 2)}
@@ -60,10 +68,10 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
             entry["montant_constant"] = round(par_annee[a] * ipc_ref / ipc[a], 2)
         volume_annuel.append(entry)
 
-    # Répartition par domaine (dernière année connue, pour le graphe d'accueil)
+    # Répartition par domaine (année de référence, pour le graphe d'accueil)
     dom = defaultdict(lambda: {"volume_eur": 0.0, "count": 0, "cofog": ""})
     for r in records:
-        if annee_max and r["annee"] != annee_max:
+        if annee_ref and r["annee"] != annee_ref:
             continue
         d = r["domaine"] or "Non classé"
         dom[d]["volume_eur"] += r["montant"] or 0
@@ -121,11 +129,12 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
             "is_sample": is_sample,
             "annee_min": annees[0] if annees else None,
             "annee_max": annee_max,
+            "annee_ref": annee_ref,
             "n_records": len(records),
             "sources": sources,
             "recouvrement": recouvrement,
             "euros_constants": (
-                {"base_annee": annee_max,
+                {"base_annee": annee_ref,
                  "source": "IPC INSEE, moyennes annuelles base 2015 (idbank 001764363)"}
                 if ipc_ref else None
             ),
