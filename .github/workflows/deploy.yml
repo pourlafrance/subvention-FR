@@ -60,5 +60,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Le backend Pages échoue sporadiquement en « Deployment failed, try
+      # again later » pendant syncing_files (constaté 3x le 2026-07-04) :
+      # une seconde tentative suffit systématiquement.
       - id: deployment
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - id: deployment-retry
+        if: steps.deployment.outcome == 'failure'
         uses: actions/deploy-pages@v4
