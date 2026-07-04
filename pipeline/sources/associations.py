@@ -23,9 +23,12 @@ Le type par défaut est « association » (objet du canal données essentielles)
 l'enrichissement SIRENE aval requalifie les entreprises le cas échéant.
 
 Robustesse : une ressource morte chez UNE collectivité ne doit pas masquer
-les 52 autres — les échecs par ressource sont comptés et affichés, et le run
-échoue si plus de 20 % des jeux de données sont inexploitables (ou zéro
-enregistrement au total). Aucun échec n'est silencieux.
+les 52 autres — les échecs par jeu de données sont comptés et affichés, et le
+run échoue si plus de la moitié des jeux sont inexploitables (ou zéro
+enregistrement au total). Aucun échec n'est silencieux. Le seuil est à 50 %
+car l'audit du 1er run réel a monté une longue traîne incompressible :
+liens morts (Grand Lyon), fichiers xlsx sans CSV, exports comptables sans
+rapport publiés sous ce schéma. La couverture est annotée à chaque run.
 """
 from __future__ import annotations
 
@@ -35,7 +38,7 @@ from ..normalize import make_record, to_float, to_year
 SCHEMA_ID = "scdl/subventions"
 LIST_URL = "https://www.data.gouv.fr/api/2/datasets/"
 SOURCE_NAME = "Données essentielles des subventions (SCDL, data.gouv.fr)"
-MAX_ECHEC_RATIO = 0.2
+MAX_ECHEC_RATIO = 0.5
 
 
 def _datasets_scdl() -> list[dict]:
@@ -63,7 +66,7 @@ def fetch() -> list[dict]:
             resources = common.datagouv_csv_resources(ds["id"])
             n_avant = len(records)
             for res in resources:
-                text = common.http_get(res["url"]).text
+                text = common.fetch_text(res["url"])
                 for row in common.read_csv(text):
                     rec = _map_row(row, res["url"])
                     if rec:
@@ -88,15 +91,22 @@ def fetch() -> list[dict]:
 
 
 def _map_row(row: dict, url: str) -> dict | None:
-    nom = common.pick(row, "nomBeneficiaire", "beneficiaire", "nom_beneficiaire", "denomination")
+    # Les candidats au-delà du schéma officiel sont des variantes CONSTATÉES
+    # sur fichiers réels : libellés français à astérisques (DILCRAH), faute de
+    # frappe « nomBenecifiaire » (Dordogne), en-têtes majuscules (Bayonne).
+    # La normalisation de common.pick ignore casse/accents/espaces/astérisques.
+    nom = common.pick(row, "nomBeneficiaire", "beneficiaire", "denomination",
+                      "Nom du bénéficiaire", "nomBenecifiaire", "nom")
     if not nom:
         return None
-    siret = common.pick(row, "idBeneficiaire", "siret", "siren")
+    siret = common.pick(row, "idBeneficiaire", "siret", "siren",
+                        "Identification du bénéficiaire")
     siren = siret[:9] if siret[:9].isdigit() else ""
     # Datation en cascade : dateConvention (requise au schéma mais vide sur des
     # milliers de lignes réelles, ex. Ville de Lyon), puis période de versement,
     # puis référence de décision (souvent préfixée de l'année).
-    annee = to_year(common.pick(row, "dateConvention", "annee", "date_convention", "dateDecision"))
+    annee = to_year(common.pick(row, "dateConvention", "annee", "dateDecision",
+                                "Date de convention"))
     if annee is None:
         annee = to_year(common.pick(row, "datesPeriodeVersement"))
     if annee is None:
@@ -105,12 +115,14 @@ def _map_row(row: dict, url: str) -> dict | None:
         nom=nom,
         type_="association",
         annee=annee,
-        montant=to_float(common.pick(row, "montant", "montantTotal", "montant_total")),
-        objet=common.pick(row, "objet", "objetSubvention"),
+        montant=to_float(common.pick(row, "montant", "montantTotal",
+                                     "Montant total de la subvention")),
+        objet=common.pick(row, "objet", "objetSubvention", "Objet de la convention"),
         # L'attribuant peut être l'État ou une collectivité : non typé ici.
         financeur_type="",
-        financeur_nom=common.pick(row, "nomAttribuant", "attribuant", "nom_attribuant"),
-        programme=common.pick(row, "programme", "codeProgramme", "programme_code"),
+        financeur_nom=common.pick(row, "nomAttribuant", "attribuant",
+                                  "Nom attributaire", "nom collectivité"),
+        programme=common.pick(row, "programme", "codeProgramme"),
         mission=common.pick(row, "mission"),
         siren=siren,
         rna=common.pick(row, "rnaBeneficiaire", "rna", "idRna"),

@@ -93,6 +93,9 @@ et D3 (aides d'État TAM). Le site est **publiable tel quel** (avec sa bannière
   + hydratation `/api/projects/{qid}`. Parseur à valider sur le CSV réel dès l'endpoint rétabli.
 - ⬜ **D6** — Automatiser la **rotation annuelle** des sources à millésime (cube PAC, jaune budgétaire) :
   découverte des identifiants au lieu de constantes en dur.
+- ⬜ **D7** — Traîne SCDL (audit du 1er run réel, 2026-07) : 36/53 jeux lus. Restent ~5 publiants
+  xlsx sans CSV (lecteur openpyxl à ajouter), 4 liens morts Grand Lyon (à signaler au publiant),
+  et quelques jeux hors-schéma malgré leur déclaration. Couverture annotée à chaque run.
 
 ### Jalon P — Passage à l'échelle (le volume réel est maintenant MESURÉ)
 - ✅ **P1** — Volume réel mesuré (D2) : PAC ~530 k lignes morales/exercice + jaune ~113 k + SCDL

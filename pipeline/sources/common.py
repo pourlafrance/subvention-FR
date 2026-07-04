@@ -9,13 +9,31 @@ import requests
 
 # Pas d'User-Agent personnalisé : certains serveurs publics renvoient des
 # réponses différentes (leçon Votre-vote). On reste sur le défaut requests.
-TIMEOUT = 120
+# (connexion 30 s, lecture 120 s : un hôte mort ne bloque pas 2 min par fichier)
+TIMEOUT = (30, 120)
 
 
 def http_get(url: str, params: dict | None = None) -> requests.Response:
     r = requests.get(url, params=params, timeout=TIMEOUT)
     r.raise_for_status()
     return r
+
+
+def fetch_text(url: str) -> str:
+    """Télécharge un fichier texte en devinant l'encodage de façon robuste.
+
+    Le `.text` de requests se fie au header Content-Type, souvent absent ou
+    faux sur les portails open data : on a constaté sur fichiers réels de
+    l'UTF-8 avec BOM lu en cp1252 (« ï»¿nomAttribuant », Dordogne), et du
+    cp850 hérité d'exports DOS/Excel (« COLLECTIVIT\\x90 », Bayonne).
+    """
+    content = http_get(url).content
+    for enc in ("utf-8-sig", "cp1252", "cp850"):
+        try:
+            return content.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return content.decode("latin-1")  # ne peut pas échouer
 
 
 def datagouv_csv_resources(dataset_id: str) -> list[dict]:
@@ -38,19 +56,27 @@ def read_csv(text: str) -> list[dict]:
         delim = dialect.delimiter
     except csv.Error:
         delim = ";" if sample.count(";") >= sample.count(",") else ","
-    reader = csv.DictReader(io.StringIO(text), delimiter=delim)
-    return [row for row in reader]
+    try:
+        return list(csv.DictReader(io.StringIO(text), delimiter=delim))
+    except csv.Error:
+        # Fins de ligne mixtes (« new-line character seen in unquoted field »,
+        # constaté sur un export réel) : on normalise et on retente.
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        return list(csv.DictReader(io.StringIO(text), delimiter=delim))
 
 
 def _norm_key(k: str) -> str:
-    """Normalise un nom de colonne : casse, accents, BOM, espaces parasites.
+    """Normalise un nom de colonne : casse, accents, BOM, et tout caractère
+    non alphanumérique (espaces, astérisques, underscores).
 
-    Les fichiers réels des collectivités déforment les en-têtes du schéma
-    (« nomBénéficiaire », « Objet  », « iDRAE »…) — constaté sur les jeux
-    SCDL publiés (Ille-et-Vilaine notamment).
+    Les fichiers réels des collectivités déforment les en-têtes du schéma —
+    constaté sur les jeux SCDL publiés : « nomBénéficiaire », « Objet  »,
+    « iDRAE » (Ille-et-Vilaine), « DATE CONVENTION » (Bayonne),
+    « Date de convention* » (DILCRAH). Après normalisation, « nom_beneficiaire »,
+    « nomBénéficiaire » et « NOM BENEFICIAIRE » deviennent tous « nombeneficiaire ».
     """
     k = unicodedata.normalize("NFD", k).encode("ascii", "ignore").decode()
-    return k.lower().strip()
+    return "".join(c for c in k.lower() if c.isalnum())
 
 
 def pick(row: dict, *candidates: str) -> str:
