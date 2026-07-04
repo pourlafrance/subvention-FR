@@ -131,4 +131,7 @@ def _map_row(row: dict, url: str) -> dict | None:
         pays="FR",
         source=SOURCE_NAME,
         source_url=url,
+        # Une même convention publiée dans deux jeux (mirroring) garde le même
+        # id (dédoublonnée en aval) ; deux décisions distinctes restent distinctes.
+        ref=common.pick(row, "referenceDecision"),
     )

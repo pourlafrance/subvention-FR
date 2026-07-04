@@ -69,6 +69,9 @@ def fetch() -> list[dict]:
             pays="FR",
             source=SOURCE_NAME,
             source_url=DATASET_PAGE,
+            # NIC : distingue deux établissements d'un même SIREN recevant un
+            # versement identique (cause du doublon d'id au premier run réel).
+            ref=common.pick(row, "NIC"),
         )
         rec["source_kind"] = "jaune_associations"
         records.append(rec)

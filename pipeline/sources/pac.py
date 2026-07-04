@@ -130,6 +130,7 @@ def fetch() -> list[dict]:
                 pays="FR",
                 source=SOURCE_NAME,
                 source_url=SOURCE_URL,
+                ref=values.get("id") or "",  # id interne ASP : unicité de la ligne
             ) | {"source_kind": "pac"})
         offset += PAGE
 

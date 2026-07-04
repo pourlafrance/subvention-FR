@@ -92,6 +92,7 @@ def fetch() -> list[dict]:
             pays="FR",
             source=SOURCE_NAME,
             source_url=ZIP_URL,
+            ref=row.get("projectID") or "",
         )
         rec["source_kind"] = "ue_recherche"
         records.append(rec)

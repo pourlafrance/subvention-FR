@@ -74,12 +74,16 @@ def make_record(
     activite: str = "",
     source: str = "",
     source_url: str = "",
+    ref: str = "",
 ) -> dict:
     type_ = type_ if type_ in TYPES else "association"
     pays = (pays or "FR").upper()
     bid = beneficiaire_id(nom, siren, rna)
+    # `ref` = référence unique côté source (n° de décision, id interne, NIC…) :
+    # sans elle, deux versements légitimement distincts mais identiques sur ces
+    # cinq champs (constaté au premier run réel, 692 k lignes) fusionneraient.
     rid = hashlib.sha1(
-        f"{bid}|{annee}|{montant}|{objet}|{financeur_nom}".encode("utf-8")
+        f"{bid}|{annee}|{montant}|{objet}|{financeur_nom}|{clean_str(ref)}".encode("utf-8")
     ).hexdigest()[:16]
     return {
         "id": rid,

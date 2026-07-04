@@ -66,6 +66,17 @@ def main() -> int:
                f"{e['corrections_type']} types corrigés, {e['introuvables']} introuvables, "
                f"{e['erreurs']} erreurs, {e['ignores_plafond']} au-delà du plafond")
 
+    # Dédoublonnage par id (bénéficiaire|année|montant|objet|financeur|ref) :
+    # ne fusionne que les lignes STRICTEMENT identiques — typiquement une même
+    # convention publiée dans plusieurs jeux SCDL. Compté, jamais silencieux.
+    uniques: dict[str, dict] = {}
+    for r in records:
+        uniques.setdefault(r["id"], r)
+    n_doublons = len(records) - len(uniques)
+    records = list(uniques.values())
+    if n_doublons:
+        notice(f"Dédoublonnage : {n_doublons} lignes strictement identiques fusionnées")
+
     records = classify_all(records, load_mapping())
     n_classes = sum(1 for r in records if r["domaine"] and r["domaine"] != "Non classé")
     notice(f"Classification : {n_classes}/{len(records)} rattachés à un domaine "
