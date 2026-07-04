@@ -26,6 +26,7 @@ from __future__ import annotations
 import csv
 import io
 import os
+import time
 import zipfile
 
 import requests
@@ -39,15 +40,29 @@ TIMEOUT = 300
 
 
 def _get_zip() -> zipfile.ZipFile:
-    """Télécharge l'export (ou réutilise le cache local hors CI)."""
+    """Télécharge l'export (ou réutilise le cache local hors CI).
+
+    Reprises avec attente : un transfert de ~35 Mo peut être tronqué en vol
+    (IncompleteRead constaté en CI) — un zip tronqué lève BadZipFile à
+    l'ouverture, ce qui déclenche aussi la reprise.
+    """
     if os.path.exists(LOCAL_ZIP) and not os.environ.get("CI"):
         return zipfile.ZipFile(LOCAL_ZIP)
     os.makedirs(os.path.dirname(LOCAL_ZIP), exist_ok=True)
-    r = requests.get(ZIP_URL, timeout=TIMEOUT)
-    r.raise_for_status()
-    with open(LOCAL_ZIP, "wb") as f:
-        f.write(r.content)
-    return zipfile.ZipFile(LOCAL_ZIP)
+    derniere_erreur = None
+    for tentative in range(3):
+        if tentative:
+            time.sleep(20 * tentative)
+        try:
+            r = requests.get(ZIP_URL, timeout=TIMEOUT)
+            r.raise_for_status()
+            with open(LOCAL_ZIP, "wb") as f:
+                f.write(r.content)
+            return zipfile.ZipFile(LOCAL_ZIP)
+        except (requests.RequestException, zipfile.BadZipFile) as exc:
+            derniere_erreur = exc
+            print(f"::warning::CORDIS : tentative {tentative + 1}/3 en échec ({exc})")
+    raise RuntimeError(f"CORDIS : téléchargement en échec après 3 tentatives ({derniere_erreur})")
 
 
 def _read(z: zipfile.ZipFile, name: str):
