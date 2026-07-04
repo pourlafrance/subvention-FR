@@ -49,20 +49,19 @@ def load_ipc(path: str = IPC_PATH) -> dict[int, float]:
 def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) -> dict:
     annees = sorted({r["annee"] for r in records if r["annee"]})
     annee_max = annees[-1] if annees else None
-    # Année de référence des agrégats « dernière année » : la plus récente qui
-    # soit à la fois NON future et couverte par PLUSIEURS sources. Les années
-    # futures (engagements pluriannuels CORDIS/SCDL datés de l'année de début)
-    # et les années en cours alimentées par une seule source ne sont pas
-    # représentatives d'un exercice — constaté au 1er run réel (« 2027 » puis
-    # « 2026 » ne portaient que CORDIS).
+    # Année de référence des agrégats « dernière année » : le dernier exercice
+    # RÉVOLU couvert par PLUSIEURS sources. Ni les années futures (engagements
+    # pluriannuels CORDIS/SCDL datés de l'année de début), ni l'année en cours
+    # (partiellement alimentée), ni une année mono-source ne représentent un
+    # exercice — constaté aux premiers runs réels (« 2027 », puis « 2026 »).
     annee_courante = date.today().year
     sources_par_annee = defaultdict(set)
     for r in records:
         if r["annee"]:
             sources_par_annee[r["annee"]].add(r.get("source_kind") or r.get("source") or "?")
-    candidates = [a for a in annees if a <= annee_courante and len(sources_par_annee[a]) >= 2]
+    candidates = [a for a in annees if a < annee_courante and len(sources_par_annee[a]) >= 2]
     if not candidates:
-        candidates = [a for a in annees if a <= annee_courante]
+        candidates = [a for a in annees if a < annee_courante] or [a for a in annees if a <= annee_courante]
     annee_ref = candidates[-1] if candidates else annee_max
 
     assos = [r for r in records if r["beneficiaire"]["type"] == "association"]

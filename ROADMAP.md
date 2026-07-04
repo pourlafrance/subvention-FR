@@ -103,6 +103,9 @@ et D3 (aides d'État TAM). Le site est **publiable tel quel** (avec sa bannière
 - ⬜ **D7** — Traîne SCDL (audit du 1er run réel, 2026-07) : 36/53 jeux lus. Restent ~5 publiants
   xlsx sans CSV (lecteur openpyxl à ajouter), 4 liens morts Grand Lyon (à signaler au publiant),
   et quelques jeux hors-schéma malgré leur déclaration. Couverture annotée à chaque run.
+  Constaté aussi : la couverture VARIE d'un run à l'autre (38 224 à 54 173 lignes selon la
+  disponibilité des hôtes des collectivités) → prévoir un cache « dernière version saine » par
+  jeu de données pour lisser les pannes passagères.
 
 ### Jalon P — Passage à l'échelle (le volume réel est maintenant MESURÉ)
 - ✅ **P1** — Volume réel mesuré (D2) : PAC ~530 k lignes morales/exercice + jaune ~113 k + SCDL
