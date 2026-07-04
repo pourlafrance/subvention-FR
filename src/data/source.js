@@ -75,14 +75,22 @@ async function createJsonSource(stats) {
 
 /* ---------- Sélection de l'implémentation ---------- */
 
+let _stats = null
 let _impl = null
 let _loading = null
+
+// stats.json se suffit à lui-même : l'accueil et les filtres ne doivent pas
+// attendre le démarrage du worker SQLite (wasm ~1,2 Mo), réservé au détail.
+function loadStats() {
+  if (!_stats) _stats = fetch(`${BASE}data/stats.json`).then((r) => r.json())
+  return _stats
+}
 
 async function impl() {
   if (_impl) return _impl
   if (_loading) return _loading
   _loading = (async () => {
-    const stats = await fetch(`${BASE}data/stats.json`).then((r) => r.json())
+    const stats = await loadStats()
     const force = new URLSearchParams(window.location.search).get('data')
     const mode = force || stats?.meta?.detail || 'json'
     if (mode === 'sqlite') {
@@ -97,9 +105,11 @@ async function impl() {
 }
 
 export async function getStats() {
-  return (await impl()).getStats()
+  return loadStats()
 }
 export async function getFilters() {
+  const stats = await loadStats()
+  if (stats?.filters) return stats.filters
   return (await impl()).getFilters()
 }
 export async function search(params) {
