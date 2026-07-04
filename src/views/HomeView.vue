@@ -55,9 +55,15 @@ function runSearch() {
       <div class="value num" style="font-size:2.4rem;font-weight:700;letter-spacing:-.02em;color:var(--bleu)">
         {{ formatPct(stats.kpi.estimation.part_visible) }}
       </div>
+      <div style="margin-top:2px">
+        <span class="num">{{ formatEur(stats.kpi.estimation.volume_visible_eur) }}</span> documentés ici, sur
+        <strong class="num">~{{ formatEur(stats.kpi.estimation.volume_estime_total_eur) }}/an</strong>
+        d'aides <em>estimées</em> — une estimation (commission d'enquête du Sénat, 2025), pas une
+        comptabilité&nbsp;: <strong>il n'en existe pas</strong>.
+      </div>
       <p class="muted" style="max-width:65ch;margin:8px 0 0">
-        Le reste échappe à une publication exhaustive&nbsp;: même l'État ne dispose pas d'un recensement complet
-        des aides qu'il verse.
+        Même l'État ne parvient pas à retracer le reste&nbsp;: aucun recensement exhaustif des aides versées
+        n'existe.
         <template v-if="stats.kpi.estimation.depenses_fiscales">
           À elles seules, les niches fiscales aux entreprises représentent
           <strong class="num">{{ formatEur(stats.kpi.estimation.depenses_fiscales.total_entreprises_eur) }}</strong>

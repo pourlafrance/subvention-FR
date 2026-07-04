@@ -66,8 +66,10 @@ def fetch() -> list[dict]:
             programme=common.pick(row, "Programme"),
             siren=siren if len(siren) == 9 else "",
             commune=common.pick(row, "COG : libellé", "cog libelle"),
-            departement=dept_from_insee(common.pick(row, "COG : code")),
-            pays="FR",
+            departement=dept_from_insee(cog := common.pick(row, "COG : code")),
+            # COG 99xxx = bénéficiaire établi à l'étranger (pays non identifié
+            # sans table des codes pays INSEE) : "ZZ" le marque hors France.
+            pays="ZZ" if cog.strip().startswith("99") else "FR",
             source=SOURCE_NAME,
             source_url=DATASET_PAGE,
             # NIC : distingue deux établissements d'un même SIREN recevant un

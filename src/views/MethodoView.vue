@@ -66,7 +66,9 @@ onMounted(async () => { try { meta.value = (await getStats()).meta } catch (e) {
         consommation de l'INSEE (moyennes annuelles, base 2015). La table utilisée est versionnée dans le dépôt.</dd>
       <dt>L'argent qui sort sans bénéficiaire</dt>
       <dd>Une grande partie du soutien public ne passe pas par des versements nominatifs&nbsp;: les
-        <strong>dépenses fiscales</strong> (niches) coûtent ~90&nbsp;Md€/an, dont ~53&nbsp;Md€ pour les
+        <strong>dépenses fiscales</strong> («&nbsp;niches&nbsp;») — des dérogations à l'impôt votées par le
+        Parlement (crédits d'impôt, exonérations, taux réduits), parfaitement légales, économiquement
+        équivalentes à des subventions versées «&nbsp;en creux&nbsp;» — coûtent ~90&nbsp;Md€/an, dont ~53&nbsp;Md€ pour les
         252 dispositifs bénéficiant aux entreprises (chiffrage PLF&nbsp;2023, réalisation 2021, 177 dispositifs
         chiffrés) — l'État en connaît le coût <em>par dispositif</em>,
         mais aucun bénéficiaire n'est publié, ni souvent connu. Fait notable&nbsp;: le PLF&nbsp;2023 est le

@@ -50,6 +50,8 @@ def dept_from_insee(code) -> str:
     code = clean_str(code).upper()
     if not code or len(code) < 4:
         return ""
+    if code[:2] == "99":  # COG 99xxx = pays étranger, pas un département
+        return ""
     if code[:2] in ("97", "98"):
         return code[:3]
     if code[:2] in ("2A", "2B"):
