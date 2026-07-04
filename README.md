@@ -1,79 +1,76 @@
 # Subventions FR — où va l'argent public&nbsp;?
 
-Observatoire citoyen, **politiquement neutre**, des subventions publiques françaises.
-Site statique alimenté **exclusivement** par des sources publiques officielles
-(data.gouv.fr, INSEE, ASP, Commission européenne). Aucun backend.
+**https://pourlafrance.github.io/subvention-FR/**
 
-> ⚠️ Le dépôt est livré avec un **jeu de données de démonstration** (fictif,
-> clairement étiqueté par une bannière). Le pipeline réel prend le relais en CI
-> une fois les sources validées — voir [ROADMAP.md](./ROADMAP.md).
+Observatoire citoyen, **politiquement neutre**, des subventions publiques
+françaises&nbsp;: qui reçoit de l'argent public, combien, de qui, pour quoi.
+Alimenté exclusivement par des données publiques officielles. Aucun backend,
+aucun compte, aucun traceur&nbsp;: un site statique que chacun peut auditer.
 
-## Principes
+## Le principe
 
-- **Sources officielles uniquement**, citées et datées.
-- **Neutralité par conception** : les domaines (culture, écologie, social…) ne sont
-  pas inventés mais dérivés de la **classification COFOG** (INSEE/ONU). Le site décrit, il ne commente pas.
-- **Honnêteté sur les angles morts** : la part non documentée est affichée, pas masquée.
-- **Garde-fous légaux** : aucune personne physique nommée (RGPD ; CJUE 2010 pour la PAC).
-- **Fail-loud** : un run CI vert garantit de vraies données.
+L'argent public versé aux associations, aux entreprises et aux exploitations
+agricoles est public… mais dispersé dans des dizaines de publications
+(data.gouv.fr, ASP, Commission européenne, annexes budgétaires), dans des
+formats hétérogènes et sans vue d'ensemble. Ce projet les consolide en un site
+unique où chacun peut&nbsp;:
 
-## Architecture
+- **rechercher un bénéficiaire** et voir tout ce qu'il a reçu, depuis quand,
+  versé par qui et à quel titre&nbsp;;
+- voir la **répartition par domaine** (culture, écologie, social…) et
+  l'**évolution du volume annuel**, en euros courants et constants&nbsp;;
+- **exporter les résultats** (CSV) et vérifier chaque ligne à sa source.
 
-Deux artefacts produits au *build* par le pipeline, parce qu'ils ont des contraintes inverses :
+## Neutralité par conception
 
-- `public/data/stats.json` — agrégats précalculés (KPI, répartition par domaine), chargés
-  directement par l'accueil.
-- `public/data/subventions.json` / `subventions.db` — le détail. La couche d'accès
-  (`src/data/source.js`) bascule automatiquement selon le volume (`stats.meta.detail`) :
-  JSON en mémoire pour la démo, base SQLite interrogée par requêtes HTTP Range
-  (`sql.js-httpvfs`) au volume réel — voir
-  [`src/data/sqlite.adapter.md`](./src/data/sqlite.adapter.md).
+- **Sources officielles uniquement**, citées et datées sur chaque ligne.
+- **Aucune catégorie inventée**&nbsp;: les domaines dérivent de la
+  classification internationale COFOG (ONU/OCDE, utilisée par l'INSEE)&nbsp;;
+  la table de correspondance est versionnée dans ce dépôt et contestable.
+- **Le site décrit, il ne commente pas**&nbsp;: aucun jugement n'est porté sur
+  l'opportunité d'une subvention.
+- **Honnêteté sur les angles morts**&nbsp;: la part non documentée est
+  affichée, jamais masquée&nbsp;; les comptages partiels sont signalés comme
+  tels&nbsp;; un contrôle automatique bloque toute publication incohérente
+  avec les comptes nationaux.
+- **Garde-fous légaux**&nbsp;: aucune personne physique nommée (RGPD&nbsp;;
+  CJUE 2010 pour la PAC)&nbsp;; pas de lien subvention ↔ impôt (principe
+  d'universalité budgétaire)&nbsp;; pas de vote nominatif par subvention.
 
-```
-pipeline/        ETL Python (fetch → normalise → enrichit SIRENE → classe COFOG → contrôle → agrège → SQLite)
-  sources/       connecteurs : associations SCDL, jaune budgétaire, PAC (ASP), aides d'État, CORDIS
-  mapping/       tables auditables : programme → COFOG → domaine, IPC INSEE, plafonds COFOG (Eurostat)
-  enrich.py      enrichissement bénéficiaires via l'API Recherche d'entreprises (SIRENE)
-  checks.py      contrôles de cohérence fail-loud (plafond de dépense par division COFOG)
-src/             front Vue 3 (accueil, recherche/liste, fiche, méthodologie)
-public/data/     artefacts de données (démo committée, réel généré en CI)
-.github/         workflows : déploiement Pages + rafraîchissement des données
-```
+## Sources consolidées
 
-## Démarrage
+| Source officielle | Contenu |
+|---|---|
+| Données essentielles des subventions (SCDL, data.gouv.fr) | conventions des collectivités et services de l'État |
+| Jaune budgétaire (annexe au PLF) | versements de l'État aux associations, par programme budgétaire |
+| ASP | bénéficiaires de la PAC (FEAGA/FEADER), personnes morales uniquement |
+| Commission européenne — TAM | aides d'État aux entreprises > 500 000 € |
+| Commission européenne — CORDIS | financements Horizon Europe aux entreprises françaises |
+| INSEE — SIRENE | validation et enrichissement des fiches bénéficiaires |
 
-```bash
-npm install
-npm run data:sample   # (re)génère les données de démonstration
-npm run dev           # http://localhost:5173
-```
+Méthode, périmètre et limites assumées&nbsp;: page **Méthodologie** du site,
+et [ROADMAP.md](./ROADMAP.md) pour l'état d'avancement.
 
-Pipeline réel (réseau requis, plutôt en CI ; `SUBV_ENRICH=0` pour sauter
-l'enrichissement SIRENE) :
+## Fonctionnement
 
-```bash
-pip install -r pipeline/requirements.txt
-python -m pipeline.build
-```
+Un pipeline ouvert (`pipeline/`, Python) collecte, normalise, classe et agrège
+les données chaque semaine en intégration continue, puis publie les artefacts.
+Le site (`src/`, Vue 3) les interroge directement dans le navigateur — aucune
+donnée ne transite par un serveur tiers. Tant que le pipeline réel n'a pas
+alimenté la base, le site affiche un jeu de démonstration clairement étiqueté
+par une bannière permanente.
 
-Les connecteurs sont validés sur les vraies données (voir ROADMAP, jalon D2),
-mais au volume réel la couche détail dépasse le seuil JSON : la bascule SQLite
-côté front (jalon P2) est le préalable au premier run réel publié.
+Développement local&nbsp;: `npm install && npm run dev`.
 
-## Déploiement et mise à jour automatique
+## Contester une donnée, contribuer
 
-Tout tourne sur GitHub, sans autre service :
-
-1. Pousser sur `main` déclenche `.github/workflows/deploy.yml` (build + GitHub Pages).
-   Activer Pages dans *Settings → Pages → Source : GitHub Actions*. Le routage par hash
-   évite les 404 au rafraîchissement, quel que soit le nom du dépôt.
-2. Chaque lundi, `data-refresh.yml` exécute le pipeline réel et publie les artefacts
-   dans la release **`donnees-latest`** (la base SQLite n'est jamais committée), puis
-   redéclenche le déploiement.
-3. `deploy.yml` embarque les données de la release si elle existe, sinon la démo
-   étiquetée. Premier run réel réussi → la bannière démo disparaît d'elle-même.
+Une ligne douteuse, une classification contestable, une source manquante&nbsp;?
+Ouvrez une **issue GitHub** avec le lien de la fiche concernée. Les connecteurs
+de sources, les tables de correspondance et les contrôles de cohérence sont
+dans `pipeline/`&nbsp;: tout est auditable et chaque correction est tracée.
 
 ## Licence
 
-Code sous licence MIT. Les données restent soumises aux licences de leurs producteurs
-(Licence Ouverte / Etalab pour data.gouv.fr et l'ASP).
+Code sous licence MIT. Les données restent soumises aux licences de leurs
+producteurs (Licence Ouverte / Etalab pour data.gouv.fr et l'ASP, conditions
+propres aux portails de la Commission européenne).
