@@ -10,7 +10,8 @@ name: Rafraîchissement des données
 # Connecteurs validés sur données réelles (ROADMAP D2) : SCDL associations,
 # jaune budgétaire, PAC (portail ASP), CORDIS. Au volume réel, le front bascule
 # automatiquement sur SQLite/httpvfs (stats.meta.detail, ROADMAP P2).
-# Rotation annuelle à prévoir : identifiants du cube PAC et millésime du jaune
+# Le connecteur PAC retrouve lui-même l'exercice le plus récent depuis la page du
+# ministère de l'Agriculture ; le millésime du jaune reste à faire tourner chaque année
 # (voir les docstrings des connecteurs).
 
 on:
