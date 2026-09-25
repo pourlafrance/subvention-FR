@@ -44,6 +44,7 @@ a:hover { text-decoration: underline; }
 .sample-banner strong { color: #5a3608; }
 
 main { padding: 28px 0 60px; }
+main.garde { padding-top: 0; padding-bottom: 20px; }
 h1 { font-family: var(--serif); font-weight: 700; font-size: 1.9rem; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 8px; }
 h2 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; letter-spacing: -0.01em; line-height: 1.15; margin: 36px 0 14px; }
 .lede { color: var(--muted); font-size: 1.05rem; max-width: 70ch; }
@@ -132,3 +133,10 @@ dl.detail dd { margin: 0; }
   h1 { font-size: 1.5rem; }
     .kpi .value { font-size: 1.4rem; }
 }
+
+/* La charte (.plf hN) remet les marges des titres à zéro : on les rétablit ici. */
+.plf h1 { margin: 0 0 8px; }
+.plf h2 { margin: 36px 0 14px; }
+.plf h3 { margin: 22px 0 8px; }
+.plf .garde h1 { margin: 0; }
+.plf .plf-carte h3 { margin: 0; }

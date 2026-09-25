@@ -32,6 +32,7 @@ onMounted(async () => {
       <nav class="plf-nav">
         <a href="#/" @click.prevent="$router.back()">← Retour</a>
         <router-link to="/">Accueil</router-link>
+        <span class="plf-nav-site" aria-current="page">Subventions FR</span>
         <template v-if="!estGarde">
           <router-link to="/tableau">Tableau de bord</router-link>
           <router-link to="/liste">Rechercher</router-link>
@@ -49,7 +50,7 @@ onMounted(async () => {
       </div>
     </div>
 
-    <main>
+    <main :class="{ garde: estGarde }">
       <div class="container">
         <router-view />
       </div>

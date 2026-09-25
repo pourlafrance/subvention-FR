@@ -12,7 +12,7 @@
       <p>Où va l'argent public&nbsp;? Les subventions publiques françaises à partir des données officielles, sourcées et sans commentaire.</p>
       <div class="plf-garde-actions">
         <router-link class="plf-btn" to="/tableau">Explorer les subventions</router-link>
-        <router-link class="plf-btn-2" to="/methodologie">Méthode et sources</router-link>
+        <a class="plf-btn-2" href="https://pourlafrance.github.io/Test-de-personnalite-politique/faq.html#subventions">Méthode et sources</a>
       </div>
     </section>
 
