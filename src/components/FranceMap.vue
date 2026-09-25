@@ -35,7 +35,7 @@ function couleur(code) {
 function libelle(dep) {
   const d = parCode.value.get(dep.code)
   return d
-    ? `${dep.nom} (${dep.code}) : ${formatEur(d.volume_eur)} — ${formatInt(d.count)} subventions`
+    ? `${dep.nom} (${dep.code}) : ${formatEur(d.volume_eur)} · ${formatInt(d.count)} subventions`
     : `${dep.nom} (${dep.code}) : aucune subvention géolocalisée`
 }
 

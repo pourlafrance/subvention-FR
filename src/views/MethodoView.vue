@@ -44,15 +44,15 @@ onMounted(async () => { try { meta.value = (await getStats()).meta } catch (e) {
 
   <h2>Sources</h2>
   <ul>
-    <li><strong>Associations</strong> — Données essentielles des subventions (décret n° 2017-779, schéma SCDL)&nbsp;: ~53 jeux de données publiés par les collectivités et services de l'État sur data.gouv.fr. Les montants sont ceux des <em>conventions</em> (pluriannuelles le cas échéant), datés de l'année de signature.</li>
-    <li><strong>Associations (État)</strong> — «&nbsp;Jaune budgétaire&nbsp;»&nbsp;: annexe au PLF recensant les versements de l'État par bénéficiaire, avec le programme budgétaire (data.gouv.fr).</li>
-    <li><strong>Agriculture</strong> — Bénéficiaires de la PAC (FEAGA/FEADER), portail de reporting public de l'ASP. Personnes morales uniquement&nbsp;: sans champ de type juridique dans le flux, seules les dénominations portant une forme juridique reconnue (GAEC, EARL, association…) sont retenues — règle volontairement conservatrice.</li>
-    <li><strong>Entreprises</strong> — Aides d'État &gt; 500&nbsp;000&nbsp;€, portail Transparency Award Module de la Commission européenne&nbsp;; à terme, registre national «&nbsp;Aides d'État&nbsp;» (circulaire du 4 mars 2026).</li>
-    <li><strong>Recherche (UE)</strong> — Financements Horizon Europe aux entreprises privées françaises, export CORDIS (Commission européenne). Montants&nbsp;= engagements contractualisés sur la durée du projet, rattachés à l'année de début&nbsp;: des années futures peuvent apparaître.</li>
-    <li><strong>Transition écologique</strong> — Aides financières de l'ADEME (data.ademe.fr), personnes morales privées uniquement&nbsp;: les aides aux collectivités et à l'État (transferts public-public) sont écartées et comptées.</li>
-    <li><strong>Enrichissement</strong> — Fiches SIRENE via l'API Recherche d'entreprises (État)&nbsp;: validation du type de bénéficiaire, activité, effectifs. Aucun montant n'en provient.</li>
-    <li><strong>Classification</strong> — COFOG/CFAP (INSEE)&nbsp;; nomenclature budgétaire LOLF (Légifrance, data.gouv.fr).</li>
-    <li><strong>Ordres de grandeur</strong> — Rapport de la commission d'enquête du Sénat (2025)&nbsp;; jaune budgétaire associations.</li>
+    <li><strong>Associations</strong> : Données essentielles des subventions (décret n° 2017-779, schéma SCDL)&nbsp;: ~53 jeux de données publiés par les collectivités et services de l'État sur data.gouv.fr. Les montants sont ceux des <em>conventions</em> (pluriannuelles le cas échéant), datés de l'année de signature.</li>
+    <li><strong>Associations (État)</strong> : «&nbsp;Jaune budgétaire&nbsp;»&nbsp;: annexe au PLF recensant les versements de l'État par bénéficiaire, avec le programme budgétaire (data.gouv.fr).</li>
+    <li><strong>Agriculture</strong> : Bénéficiaires de la PAC (FEAGA/FEADER), portail de reporting public de l'ASP. Personnes morales uniquement&nbsp;: sans champ de type juridique dans le flux, seules les dénominations portant une forme juridique reconnue (GAEC, EARL, association…) sont retenues (règle volontairement conservatrice).</li>
+    <li><strong>Entreprises</strong> : Aides d'État &gt; 500&nbsp;000&nbsp;€, portail Transparency Award Module de la Commission européenne&nbsp;; à terme, registre national «&nbsp;Aides d'État&nbsp;» (circulaire du 4 mars 2026).</li>
+    <li><strong>Recherche (UE)</strong> : Financements Horizon Europe aux entreprises privées françaises, export CORDIS (Commission européenne). Montants&nbsp;= engagements contractualisés sur la durée du projet, rattachés à l'année de début&nbsp;: des années futures peuvent apparaître.</li>
+    <li><strong>Transition écologique</strong> : Aides financières de l'ADEME (data.ademe.fr), personnes morales privées uniquement&nbsp;: les aides aux collectivités et à l'État (transferts public-public) sont écartées et comptées.</li>
+    <li><strong>Enrichissement</strong> : Fiches SIRENE via l'API Recherche d'entreprises (État)&nbsp;: validation du type de bénéficiaire, activité, effectifs. Aucun montant n'en provient.</li>
+    <li><strong>Classification</strong> : COFOG/CFAP (INSEE)&nbsp;; nomenclature budgétaire LOLF (Légifrance, data.gouv.fr).</li>
+    <li><strong>Ordres de grandeur</strong> : Rapport de la commission d'enquête du Sénat (2025)&nbsp;; jaune budgétaire associations.</li>
   </ul>
 
   <h2>Périmètre et choix assumés</h2>
@@ -67,17 +67,17 @@ onMounted(async () => { try { meta.value = (await getStats()).meta } catch (e) {
         consommation de l'INSEE (moyennes annuelles, base 2015). La table utilisée est versionnée dans le dépôt.</dd>
       <dt>L'argent qui sort sans bénéficiaire</dt>
       <dd>Une grande partie du soutien public ne passe pas par des versements nominatifs&nbsp;: les
-        <strong>dépenses fiscales</strong> («&nbsp;niches&nbsp;») — des dérogations à l'impôt votées par le
+        <strong>dépenses fiscales</strong> («&nbsp;niches&nbsp;»), des dérogations à l'impôt votées par le
         Parlement (crédits d'impôt, exonérations, taux réduits), parfaitement légales, économiquement
-        équivalentes à des subventions versées «&nbsp;en creux&nbsp;» — coûtent ~90&nbsp;Md€/an, dont ~53&nbsp;Md€ pour les
+        équivalentes à des subventions versées «&nbsp;en creux&nbsp;», coûtent ~90&nbsp;Md€/an, dont ~53&nbsp;Md€ pour les
         252 dispositifs bénéficiant aux entreprises (chiffrage PLF&nbsp;2023, réalisation 2021, 177 dispositifs
-        chiffrés) — l'État en connaît le coût <em>par dispositif</em>,
+        chiffrés) : l'État en connaît le coût <em>par dispositif</em>,
         mais aucun bénéficiaire n'est publié, ni souvent connu. Fait notable&nbsp;: le PLF&nbsp;2023 est le
         <strong>dernier millésime publié en données exploitables</strong>&nbsp;; depuis, ces chiffrages ne
         paraissent qu'en PDF.</dd>
       <dt>Géolocalisation</dt>
       <dd>La carte utilise le département du <em>siège</em> du bénéficiaire (codes INSEE des sources, complétés
-        par SIRENE) — pas le lieu d'usage de l'aide. Le taux de géolocalisation est affiché avec la carte.</dd>
+        par SIRENE), pas le lieu d'usage de l'aide. Le taux de géolocalisation est affiché avec la carte.</dd>
       <dt>Co-financements</dt>
       <dd>Un même bénéficiaire peut apparaître dans plusieurs sources (État, UE, collectivités)&nbsp;: un
         co-financement peut alors être compté plusieurs fois. Ce recouvrement est mesuré et signalé, jamais

@@ -63,7 +63,7 @@ function runSearch() {
       </div>
       <p class="muted" style="margin:10px 0 0">
         Ce total n'est qu'une estimation, car il n'existe aucune comptabilité exhaustive des aides
-        publiques&nbsp;— même l'État ne sait pas retracer le reste.
+        publiques&nbsp;: même l'État ne sait pas retracer le reste.
         <template v-if="stats.kpi.estimation.depenses_fiscales">
           À elles seules, les niches fiscales aux entreprises pèsent
           <strong class="num">{{ formatEur(stats.kpi.estimation.depenses_fiscales.total_entreprises_eur) }}</strong>

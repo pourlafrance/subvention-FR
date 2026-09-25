@@ -23,23 +23,23 @@
   </p>
   <ul>
     <li><strong>Une partie est financée par l'emprunt.</strong> Le budget de l'État est en déficit chaque
-      année depuis le milieu des années 1970&nbsp;: une fraction des dépenses — subventions comprises —
+      année depuis le milieu des années 1970&nbsp;: une fraction des dépenses (subventions comprises)
       est donc payée par la dette, c'est-à-dire par les contribuables de demain.</li>
     <li><strong>Les aides européennes</strong> (PAC, fonds structurels, Horizon Europe) viennent du budget
-      de l'Union, lui-même alimenté par les contributions des États membres — dont la France est l'un des
-      premiers contributeurs — et par des ressources propres (droits de douane notamment).</li>
+      de l'Union, lui-même alimenté par les contributions des États membres (dont la France est l'un des
+      premiers contributeurs) et par des ressources propres (droits de douane notamment).</li>
   </ul>
   <p>
     En revanche, il est <strong>impossible de dire quel impôt finance quelle subvention</strong>&nbsp;: le
     principe d'<strong>universalité budgétaire</strong> (LOLF) interdit d'affecter une recette à une
-    dépense — toutes les recettes se fondent dans un pot commun. C'est pourquoi ce site rattache chaque
+    dépense : toutes les recettes se fondent dans un pot commun. C'est pourquoi ce site rattache chaque
     subvention à son <em>programme budgétaire</em> (ce que finance l'argent), jamais à un impôt
     (d'où il vient)&nbsp;: personne ne peut faire ce lien, pas même l'État.
   </p>
 
   <h2 id="niche-fiscale">Qu'appelle-t-on une «&nbsp;niche fiscale&nbsp;»&nbsp;?</h2>
   <p>
-    Une niche fiscale — le terme officiel est <strong>dépense fiscale</strong> — est une exception
+    Une niche fiscale (le terme officiel est <strong>dépense fiscale</strong>) est une exception
     <strong>parfaitement légale</strong> à la règle normale de l'impôt, <strong>votée par le
     Parlement</strong> dans la loi de finances. Au lieu de
     verser de l'argent, l'État <strong>renonce à en prélever</strong>&nbsp;: économiquement, cela revient à
@@ -49,7 +49,7 @@
     <dl class="detail">
       <dt>Crédit d'impôt</dt>
       <dd>L'entreprise déduit de son impôt une partie d'une dépense. Exemple&nbsp;: le Crédit Impôt
-        Recherche, ~7&nbsp;Md€/an — la plus grosse niche «&nbsp;entreprises&nbsp;» de France.</dd>
+        Recherche, ~7&nbsp;Md€/an, la plus grosse niche «&nbsp;entreprises&nbsp;» de France.</dd>
       <dt>Exonération</dt>
       <dd>Certaines activités ou zones ne paient pas un impôt (ex.&nbsp;: zones franches urbaines).</dd>
       <dt>Taux réduit</dt>
@@ -66,7 +66,7 @@
 
   <h3>Légal ou illégal&nbsp;?</h3>
   <p>
-    <strong>Parfaitement légal</strong> — c'est même le contraire d'une fraude&nbsp;: la niche est créée
+    <strong>Parfaitement légal</strong> : c'est même le contraire d'une fraude&nbsp;: la niche est créée
     par la loi, débattue et votée chaque automne, et son usage par une entreprise est l'application du
     droit. À distinguer de la <strong>fraude fiscale</strong> (dissimuler des revenus&nbsp;: un délit) et
     de l'<strong>optimisation agressive</strong> (montages exploitant les failles entre législations,
@@ -74,11 +74,11 @@
   </p>
 
   <h3>Pourquoi cela fait-il débat&nbsp;?</h3>
-  <p>Parce que légal ne veut dire ni transparent, ni évalué&nbsp;— trois faits documentés&nbsp;:</p>
+  <p>Parce que légal ne veut dire ni transparent, ni évalué&nbsp;: trois faits documentés&nbsp;:</p>
   <ul>
     <li><strong>Personne ne sait qui en bénéficie.</strong> L'État publie le coût <em>par dispositif</em>
       (~53&nbsp;Md€/an pour les 252 dispositifs bénéficiant aux entreprises, chiffrage PLF&nbsp;2023),
-      mais aucun bénéficiaire, jamais — contrairement aux subventions classiques.</li>
+      mais aucun bénéficiaire, jamais, contrairement aux subventions classiques.</li>
     <li><strong>L'efficacité est rarement évaluée</strong>&nbsp;: la Cour des comptes relève régulièrement
       que de nombreux dispositifs perdurent sans mesure de leur effet réel.</li>
     <li><strong>La transparence recule</strong>&nbsp;: le PLF&nbsp;2023 est le dernier millésime dont les
@@ -88,7 +88,7 @@
   <h2 id="total-inconnu">Pourquoi le total des aides est-il inconnu&nbsp;?</h2>
   <p>
     Il n'existe <strong>aucune comptabilité exhaustive</strong> des aides publiques françaises. Le chiffre
-    de ~234&nbsp;Md€/an affiché sur l'accueil est une <strong>estimation</strong> — celle de la commission
+    de ~234&nbsp;Md€/an affiché sur l'accueil est une <strong>estimation</strong>, celle de la commission
     d'enquête du Sénat (2025), qui a dû produire son propre calcul faute de recensement d'État&nbsp;:
     ~211&nbsp;Md€ d'aides aux entreprises (subventions, niches, exonérations confondues) et ~23&nbsp;Md€
     vers les associations. C'est le constat fondateur de ce site&nbsp;: la part documentée est affichée,

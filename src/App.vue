@@ -1,9 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { getStats } from './data/source.js'
 
 const isSample = ref(false)
 const anneeMax = ref(null)
+const route = useRoute()
+// La page de garde commune porte sa propre marque et son propre pied de page.
+const estGarde = computed(() => route.name === 'garde')
 
 onMounted(async () => {
   try {
@@ -17,45 +21,51 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="tricolore" aria-hidden="true"><i></i><i></i><i></i></div>
-
-  <header class="site">
-    <div class="container bar">
-      <router-link to="/" class="brand">
-        Subventions FR
-        <small>Où va l'argent public ? — données officielles, sourcées</small>
-      </router-link>
-      <nav>
+  <div class="plf">
+    <div class="plf-wrap">
+      <header class="plf-marque">
+        <span class="plf-drapeau" aria-hidden="true"><span></span><span></span><span></span></span>
+        <router-link class="plf-marque-nom" to="/"><span class="plf-mot-bleu">Pour</span> <span class="plf-mot-blanc">la</span> <span class="plf-mot-rouge">France</span></router-link>
+        <span class="plf-marque-devise">Indépendant · anonyme · open source</span>
+      </header>
+      <div class="plf-filet-tricolore" aria-hidden="true"><span></span><span></span><span></span></div>
+      <nav class="plf-nav">
+        <a href="#/" @click.prevent="$router.back()">← Retour</a>
         <router-link to="/">Accueil</router-link>
-        <router-link to="/liste">Rechercher</router-link>
-        <router-link to="/explications">Comprendre</router-link>
-        <router-link to="/methodologie">Méthodologie</router-link>
+        <template v-if="!estGarde">
+          <router-link to="/tableau">Tableau de bord</router-link>
+          <router-link to="/liste">Rechercher</router-link>
+          <router-link to="/explications">Comprendre</router-link>
+          <router-link to="/methodologie">Méthodologie</router-link>
+        </template>
       </nav>
     </div>
-  </header>
 
-  <div v-if="isSample" class="sample-banner">
-    <div class="container">
-      <strong>Données de démonstration.</strong>
-      Les chiffres affichés sont fictifs et servent uniquement à illustrer le fonctionnement du site.
-      Tant que cette bannière est visible, le pipeline officiel n'a pas encore alimenté la base.
+    <div v-if="isSample" class="sample-banner">
+      <div class="plf-wrap">
+        <strong>Données de démonstration.</strong>
+        Les chiffres affichés sont fictifs et servent uniquement à illustrer le fonctionnement du site.
+        Tant que cette bannière est visible, le pipeline officiel n'a pas encore alimenté la base.
+      </div>
+    </div>
+
+    <main>
+      <div class="container">
+        <router-view />
+      </div>
+    </main>
+
+    <div class="plf-wrap">
+      <footer class="plf-pied">
+        <div class="plf-filet-tricolore plf-filet-tricolore--court" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p>Pour la France · projet citoyen indépendant · Liberté, Égalité, Fraternité</p>
+        <p>
+          <router-link to="/">Accueil</router-link> ·
+          <a href="https://pourlafrance.github.io/Test-de-personnalite-politique/faq.html">FAQ</a> ·
+          <a href="https://x.com/fracoiselibre" target="_blank" rel="noopener">Compte X</a> ·
+          <a href="https://github.com/pourlafrance/subvention-FR" target="_blank" rel="noopener">Code source (GitHub)</a>
+        </p>
+      </footer>
     </div>
   </div>
-
-  <main>
-    <div class="container">
-      <router-view />
-    </div>
-  </main>
-
-  <footer class="site">
-    <div class="container">
-      <p>
-        Projet citoyen, politiquement neutre. Données issues exclusivement de sources publiques officielles
-        (data.gouv.fr, INSEE, ASP, Commission européenne). Voir la
-        <router-link to="/methodologie">méthodologie et les limites</router-link>.
-      </p>
-      <p class="muted">Aucune donnée nominative de personne physique. Classification par fonction COFOG (INSEE).</p>
-    </div>
-  </footer>
 </template>

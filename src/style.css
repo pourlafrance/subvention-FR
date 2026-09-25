@@ -1,18 +1,20 @@
+/* Tokens alignés sur la charte commune « Pour la France » (src/charte.css). */
 :root {
-  --bg: #faf9f6;
+  --bg: #FBFAF8;
   --surface: #ffffff;
-  --ink: #16161d;
-  --muted: #5b5b66;
-  --faint: #8a8a93;
-  --line: #e5e2da;
-  --line-strong: #cfccc2;
-  --bleu: #000091;        /* bleu Marianne */
-  --bleu-soft: #ebebf6;
-  --rouge: #e1000f;       /* rouge Marianne, usage parcimonieux */
-  --bleu-ink: #1c1c54;
-  --radius: 8px;
+  --ink: #1A1D21;
+  --muted: #6B6660;
+  --faint: #6B6660;
+  --line: #E4E1DC;
+  --line-strong: #D8D4CE;
+  --bleu: #000091;        /* bleu République */
+  --bleu-soft: #EBEBF6;
+  --rouge: #E1000F;       /* réservé au filet tricolore */
+  --bleu-ink: #000091;
+  --radius: 0;
   --maxw: 1040px;
-  --sans: "Marianne", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Spectral", Georgia, serif;
 }
 
 * { box-sizing: border-box; }
@@ -22,7 +24,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -30,29 +32,9 @@ a { color: var(--bleu); text-decoration: none; }
 a:hover { text-decoration: underline; }
 .num { font-variant-numeric: tabular-nums; }
 
-.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+@media (max-width: 560px) { .container { padding: 0 16px; } }
 
-/* En-tête tricolore */
-.tricolore { display: flex; height: 4px; }
-.tricolore i { flex: 1; }
-.tricolore i:nth-child(1) { background: var(--bleu); }
-.tricolore i:nth-child(2) { background: #fff; }
-.tricolore i:nth-child(3) { background: var(--rouge); }
-
-header.site {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  position: sticky; top: 0; z-index: 10;
-}
-header.site .bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; padding: 14px 0;
-}
-header.site .brand { font-weight: 700; letter-spacing: -0.01em; color: var(--ink); font-size: 1.05rem; }
-header.site .brand small { display: block; font-weight: 400; color: var(--muted); font-size: 0.72rem; letter-spacing: 0; }
-header.site nav { display: flex; gap: 18px; flex-wrap: wrap; }
-header.site nav a { color: var(--muted); font-size: 0.9rem; }
-header.site nav a.router-link-active { color: var(--ink); font-weight: 600; }
 
 /* Bannière démo */
 .sample-banner {
@@ -62,8 +44,8 @@ header.site nav a.router-link-active { color: var(--ink); font-weight: 600; }
 .sample-banner strong { color: #5a3608; }
 
 main { padding: 28px 0 60px; }
-h1 { font-size: 1.9rem; letter-spacing: -0.02em; margin: 0 0 8px; }
-h2 { font-size: 1.25rem; letter-spacing: -0.01em; margin: 36px 0 14px; }
+h1 { font-family: var(--serif); font-weight: 700; font-size: 1.9rem; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 8px; }
+h2 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; letter-spacing: -0.01em; line-height: 1.15; margin: 36px 0 14px; }
 .lede { color: var(--muted); font-size: 1.05rem; max-width: 70ch; }
 
 /* Cartes KPI */
@@ -109,7 +91,7 @@ select {
 .row .meta { color: var(--muted); font-size: 0.85rem; }
 .row .montant { font-weight: 700; font-size: 1.05rem; text-align: right; white-space: nowrap; }
 .tag {
-  display: inline-block; font-size: 0.72rem; padding: 2px 8px; border-radius: 20px;
+  display: inline-block; font-size: 0.72rem; padding: 2px 8px;
   background: var(--bleu-soft); color: var(--bleu-ink); margin-right: 6px;
 }
 .tag.etranger { background: #fdeaea; color: #8a1f1f; }
@@ -140,15 +122,13 @@ select {
 }
 .chart-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
 
-footer.site { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 0.85rem; }
-footer.site a { color: var(--muted); text-decoration: underline; }
 
 dl.detail { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 0; }
 dl.detail dt { color: var(--muted); }
 dl.detail dd { margin: 0; }
 
 @media (max-width: 600px) {
+  body { font-size: 16px; }
   h1 { font-size: 1.5rem; }
-  header.site nav { gap: 12px; }
-  .kpi .value { font-size: 1.4rem; }
+    .kpi .value { font-size: 1.4rem; }
 }
