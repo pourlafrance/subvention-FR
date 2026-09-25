@@ -13,11 +13,15 @@ from datetime import date
 IPC_PATH = os.path.join(os.path.dirname(__file__), "mapping", "ipc_insee.csv")
 DF_PATH = os.path.join(os.path.dirname(__file__), "mapping", "depenses_fiscales_plf2023.csv")
 
-# Références macro pour l'estimation de la part non publiée (à sourcer / affiner).
-# Sénat, commission d'enquête 2025 : ~211 Md€/an d'aides aux entreprises.
-# Jaune budgétaire associations : ordre de grandeur ~8,5 Md€ État + collectivités.
+# Référence macro pour l'estimation de la part non publiée.
+# Sénat, commission d'enquête sur les aides publiques aux entreprises, rapport n° 808
+# (2024-2025), déposé le 1er juillet 2025 : « au moins 211 milliards d'euros » d'aides aux
+# entreprises en 2023, au sens large, présentés comme un ordre de grandeur :
+# https://www.senat.fr/rap/r24-808-1/r24-808-1_mono.html
+# Le rapport ne chiffre que les entreprises : aucun total sourcé n'est retenu pour les
+# associations, et la comparaison se fait à année (2023) et périmètre (entreprises) identiques.
 REF_TOTAL_ENTREPRISES_EUR = 211_000_000_000
-REF_TOTAL_ASSOCIATIONS_EUR = 23_000_000_000
+REF_ANNEE_ENTREPRISES = 2023
 
 # Libellés lisibles des sources pour les agrégats (clé = source_kind).
 SOURCE_LABELS = {
@@ -74,7 +78,7 @@ def load_depenses_fiscales(path: str = DF_PATH) -> dict | None:
         "n_dispositifs": n_total,
         "n_chiffres": n_chiffres,
         "annee_chiffrage": 2021,
-        "source": "PLF 2023, Voies et Moyens tome II (dernier millésime machine-readable)",
+        "source": "PLF 2023, annexe Voies et moyens tome II (réalisation 2021)",
     }
 
 
@@ -199,11 +203,13 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
     vol_etranger = _sum(records, lambda r: r["beneficiaire"]["est_etranger"])
     vol_total = _sum(records, lambda r: True)
 
-    # Estimation part visible / part totale estimée.
+    # Estimation : aides aux entreprises documentées pour l'année de référence du Sénat,
+    # rapportées à l'estimation du Sénat pour cette même année (même périmètre).
     visible_ent = _sum(ents, lambda r: True)
     visible_asso = _sum(assos, lambda r: True)
-    estime_total = REF_TOTAL_ENTREPRISES_EUR + REF_TOTAL_ASSOCIATIONS_EUR
-    part_visible = (visible_ent + visible_asso) / estime_total if estime_total else None
+    visible_ent_ref = _sum(ents, lambda r: r["annee"] == REF_ANNEE_ENTREPRISES)
+    estime_total = REF_TOTAL_ENTREPRISES_EUR
+    part_visible = visible_ent_ref / estime_total if estime_total else None
 
     return {
         "meta": {
@@ -230,14 +236,17 @@ def build_stats(records: list[dict], *, is_sample: bool, sources: list[dict]) ->
                 "share": round(vol_etranger / vol_total, 4) if vol_total else 0,
             },
             "estimation": {
-                "volume_visible_eur": round(visible_ent + visible_asso, 2),
+                "volume_visible_eur": round(visible_ent_ref, 2),
                 "volume_estime_total_eur": estime_total,
                 "part_visible": round(part_visible, 4) if part_visible else None,
+                "annee_reference": REF_ANNEE_ENTREPRISES,
+                "perimetre": "entreprises",
                 # Décomposition de l'invisible : les dépenses fiscales sortent
-                # sans bénéficiaire nominatif — coût connu par dispositif.
+                # sans bénéficiaire nominatif, coût connu par dispositif.
                 "depenses_fiscales": load_depenses_fiscales(),
-                "note": "Estimation : part publiée rapportée aux ordres de grandeur connus "
-                        "(Sénat 2025 pour les entreprises, jaune budgétaire pour les associations).",
+                "note": "Aides aux entreprises documentées pour 2023, rapportées à l'estimation du "
+                        "Sénat (rapport n° 808, 2025) pour la même année : ordre de grandeur, plancher "
+                        "(toutes les sources ne couvrent pas 2023).",
             },
         },
         "domaines": domaines,

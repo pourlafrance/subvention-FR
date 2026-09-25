@@ -23,8 +23,8 @@
   </p>
   <ul>
     <li><strong>Une partie est financée par l'emprunt.</strong> Le budget de l'État est en déficit chaque
-      année depuis le milieu des années 1970&nbsp;: une fraction des dépenses (subventions comprises)
-      est donc payée par la dette, c'est-à-dire par les contribuables de demain.</li>
+      année depuis 1974 (<a href="https://www.vie-publique.fr/fiches/21816-les-finances-publiques-depuis-la-crise-des-annees-1970" target="_blank" rel="noopener">Vie-publique.fr</a>)&nbsp;:
+      une fraction des dépenses, subventions comprises, est donc financée par l'emprunt.</li>
     <li><strong>Les aides européennes</strong> (PAC, fonds structurels, Horizon Europe) viennent du budget
       de l'Union, lui-même alimenté par les contributions des États membres (dont la France est l'un des
       premiers contributeurs) et par des ressources propres (droits de douane notamment).</li>
@@ -48,13 +48,14 @@
   <div class="card">
     <dl class="detail">
       <dt>Crédit d'impôt</dt>
-      <dd>L'entreprise déduit de son impôt une partie d'une dépense. Exemple&nbsp;: le Crédit Impôt
-        Recherche, ~7&nbsp;Md€/an, la plus grosse niche «&nbsp;entreprises&nbsp;» de France.</dd>
+      <dd>L'entreprise déduit de son impôt une partie d'une dépense. Exemple&nbsp;: le crédit d'impôt
+        recherche, environ 7&nbsp;Md€ par an (7,0&nbsp;Md€ prévus pour 2022 et 7,1&nbsp;Md€ pour 2023 dans l'annexe Voies et moyens du PLF&nbsp;2023),
+        l'une des dépenses fiscales les plus coûteuses bénéficiant aux entreprises.</dd>
       <dt>Exonération</dt>
       <dd>Certaines activités ou zones ne paient pas un impôt (ex.&nbsp;: zones franches urbaines).</dd>
       <dt>Taux réduit</dt>
-      <dd>Un tarif d'imposition abaissé (ex.&nbsp;: TVA à 10&nbsp;% en restauration, carburants détaxés
-        pour certains secteurs).</dd>
+      <dd>Un tarif d'imposition abaissé (ex.&nbsp;: taux de TVA de 10&nbsp;% pour la restauration commerciale, tarifs réduits d'accise
+        sur le gazole pour certains usages professionnels).</dd>
       <dt>Abattement</dt>
       <dd>Une partie de la base imposable est effacée avant le calcul de l'impôt.</dd>
     </dl>
@@ -74,25 +75,25 @@
   </p>
 
   <h3>Pourquoi cela fait-il débat&nbsp;?</h3>
-  <p>Parce que légal ne veut dire ni transparent, ni évalué&nbsp;: trois faits documentés&nbsp;:</p>
+  <p>Parce que légal ne veut dire ni transparent, ni évalué&nbsp;: deux faits documentés&nbsp;:</p>
   <ul>
     <li><strong>Personne ne sait qui en bénéficie.</strong> L'État publie le coût <em>par dispositif</em>
-      (~53&nbsp;Md€/an pour les 252 dispositifs bénéficiant aux entreprises, chiffrage PLF&nbsp;2023),
-      mais aucun bénéficiaire, jamais, contrairement aux subventions classiques.</li>
-    <li><strong>L'efficacité est rarement évaluée</strong>&nbsp;: la Cour des comptes relève régulièrement
-      que de nombreux dispositifs perdurent sans mesure de leur effet réel.</li>
-    <li><strong>La transparence recule</strong>&nbsp;: le PLF&nbsp;2023 est le dernier millésime dont les
-      chiffrages ont été publiés en données exploitables&nbsp;; depuis, uniquement des PDF.</li>
+      (~53&nbsp;Md€ en 2021 pour les 177 dispositifs chiffrés parmi les 252 bénéficiant aux entreprises, annexe Voies et moyens du PLF&nbsp;2023),
+      mais aucun bénéficiaire nominatif, contrairement aux subventions classiques.</li>
+    <li><strong>L'efficacité est rarement évaluée</strong>&nbsp;: le rapport de la commission d'enquête du
+      Sénat (2025) relève «&nbsp;un suivi et une évaluation des aides aux entreprises encore insuffisants&nbsp;»
+      (<a href="https://www.senat.fr/rap/r24-808-1/r24-808-1_mono.html" target="_blank" rel="noopener">rapport n°&nbsp;808</a>).</li>
   </ul>
 
   <h2 id="total-inconnu">Pourquoi le total des aides est-il inconnu&nbsp;?</h2>
   <p>
-    Il n'existe <strong>aucune comptabilité exhaustive</strong> des aides publiques françaises. Le chiffre
-    de ~234&nbsp;Md€/an affiché sur l'accueil est une <strong>estimation</strong>, celle de la commission
-    d'enquête du Sénat (2025), qui a dû produire son propre calcul faute de recensement d'État&nbsp;:
-    ~211&nbsp;Md€ d'aides aux entreprises (subventions, niches, exonérations confondues) et ~23&nbsp;Md€
-    vers les associations. C'est le constat fondateur de ce site&nbsp;: la part documentée est affichée,
-    le reste est mesuré en creux, jamais masqué.
+    Il n'existe <strong>aucune comptabilité exhaustive</strong> des aides publiques françaises. Une commission
+    d'enquête du Sénat (2025) a dû réaliser elle-même une estimation&nbsp;: au moins 211&nbsp;Md€ d'aides aux
+    entreprises en 2023, au sens large (subventions, aides de Bpifrance, dépenses fiscales, allègements de
+    cotisations), présentés comme un ordre de grandeur
+    (<a href="https://www.senat.fr/rap/r24-808-1/r24-808-1_mono.html" target="_blank" rel="noopener">rapport n°&nbsp;808</a>).
+    Ce rapport ne chiffre que les entreprises. C'est le constat fondateur de ce site&nbsp;: la part documentée
+    est affichée, le reste est mesuré en creux, jamais masqué.
   </p>
 
   <p style="margin-top:24px">

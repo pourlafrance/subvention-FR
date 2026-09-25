@@ -49,27 +49,35 @@ function runSearch() {
       et exploitations, à partir des seules données publiques officielles.
     </p>
 
-    <!-- Hero honnête : part documentée -->
+    <!-- Hero honnête : part documentée, à année et périmètre identiques à ceux du Sénat -->
     <div class="card" style="margin-top:22px">
-      <div class="label muted" style="font-size:.85rem">Part des subventions effectivement documentée dans des données ouvertes</div>
-      <div class="value num" style="font-size:2.4rem;font-weight:700;letter-spacing:-.02em;color:var(--bleu)">
-        {{ formatPct(stats.kpi.estimation.part_visible) }}
-      </div>
-      <div style="margin-top:4px">
-        <strong class="num">{{ formatEur(stats.kpi.estimation.volume_visible_eur) }}</strong> retracés
-        ligne à ligne sur ce site, rapportés aux
-        <strong class="num">~{{ formatEur(stats.kpi.estimation.volume_estime_total_eur) }}</strong> d'aides
-        annuelles estimées par la commission d'enquête du Sénat (2025).
-      </div>
-      <p class="muted" style="margin:10px 0 0">
-        Ce total n'est qu'une estimation, car il n'existe aucune comptabilité exhaustive des aides
-        publiques&nbsp;: même l'État ne sait pas retracer le reste.
-        <template v-if="stats.kpi.estimation.depenses_fiscales">
-          À elles seules, les niches fiscales aux entreprises pèsent
-          <strong class="num">{{ formatEur(stats.kpi.estimation.depenses_fiscales.total_entreprises_eur) }}</strong>
-          par an&nbsp;: coût connu, bénéficiaires jamais publiés.
-        </template>
-      </p>
+      <template v-if="stats.kpi.estimation.annee_reference">
+        <div class="label muted" style="font-size:.85rem">
+          Part des aides aux entreprises documentée dans des données ouvertes ({{ stats.kpi.estimation.annee_reference }})
+        </div>
+        <div class="value num" style="font-size:2.4rem;font-weight:700;letter-spacing:-.02em;color:var(--bleu)">
+          {{ formatPct(stats.kpi.estimation.part_visible) }}
+        </div>
+        <div style="margin-top:4px">
+          <strong class="num">{{ formatEur(stats.kpi.estimation.volume_visible_eur) }}</strong> d'aides aux entreprises
+          retracés ligne à ligne sur ce site pour {{ stats.kpi.estimation.annee_reference }}, rapportés aux
+          <strong class="num">au moins {{ formatEur(stats.kpi.estimation.volume_estime_total_eur) }}</strong> d'aides aux entreprises
+          estimés pour la même année par la commission d'enquête du Sénat
+          (<a href="https://www.senat.fr/rap/r24-808-1/r24-808-1_mono.html" target="_blank" rel="noopener">rapport n°&nbsp;808, 2025</a>).
+        </div>
+        <p class="muted" style="margin:10px 0 0">
+          Ce chiffre de référence est un ordre de grandeur, au sens large (subventions, aides de Bpifrance,
+          dépenses fiscales, allègements de cotisations)&nbsp;: il n'existe aucune comptabilité exhaustive des aides
+          publiques. Le pourcentage est un plancher, car toutes les sources ne couvrent pas cette année.
+          <template v-if="stats.kpi.estimation.depenses_fiscales">
+            Les dépenses fiscales («&nbsp;niches&nbsp;») bénéficiant aux entreprises représentaient
+            <strong class="num">{{ formatEur(stats.kpi.estimation.depenses_fiscales.total_entreprises_eur) }}</strong>
+            en {{ stats.kpi.estimation.depenses_fiscales.annee_chiffrage }} (réalisation, annexe Voies et moyens du PLF&nbsp;2023)&nbsp;:
+            coût connu, bénéficiaires jamais publiés.
+          </template>
+        </p>
+      </template>
+      <p v-else class="muted" style="margin:0">Estimation en cours de mise à jour.</p>
       <p style="margin:10px 0 0;font-size:.9rem">
         <router-link :to="{ path: '/explications', hash: '#niche-fiscale' }">Qu'appelle-t-on une niche fiscale&nbsp;?</router-link>
         &nbsp;·&nbsp;
