@@ -26,8 +26,9 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # Un run normal dure moins d'une heure : au-delà, il est bloqué.
-    timeout-minutes: 120
+    # Environ 2 h 30 de fonctionnement normal, surtout des appels SIRENE (2,5 s
+    # chacun depuis GitHub Actions) : au-delà de 4 h, il est bloqué.
+    timeout-minutes: 240
     env:
       PYTHONUNBUFFERED: "1"   # logs en direct : un run tué montre où il s'est bloqué
     steps:
@@ -37,7 +38,7 @@ jobs:
           python-version: '3.12'
       # Cache inter-runs des fiches SIRENE déjà enrichies (pipeline/.cache/) :
       # évite de re-interroger l'API Recherche d'entreprises chaque semaine.
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
         with:
           path: pipeline/.cache
           key: pipeline-cache-${{ github.run_id }}
@@ -45,6 +46,12 @@ jobs:
       - run: pip install -r pipeline/requirements.txt
       - name: Construire les données réelles
         run: python -m pipeline.build
+      # Sauvegardé même après un échec : les appels SIRENE déjà faits restent acquis.
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: pipeline/.cache
+          key: pipeline-cache-${{ github.run_id }}
       - name: Publier les données en release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -53,10 +60,18 @@ jobs:
             gh release create donnees-latest --repo "$GITHUB_REPOSITORY" \
               --title "Données consolidées (dernier run)" \
               --notes "Artefacts produits par le pipeline (voir data-refresh.yml). Écrasés à chaque run réussi."
-          gh release upload donnees-latest public/data/stats.json public/data/subventions.db \
-            --clobber --repo "$GITHUB_REPOSITORY"
+          # --clobber supprime l'ancien fichier avant d'envoyer le nouveau : une
+          # erreur serveur peut laisser la release vide, il faut donc réessayer.
+          publier() {
+            for essai in 1 2 3 4 5; do
+              gh release upload donnees-latest "$@" --clobber --repo "$GITHUB_REPOSITORY" && return 0
+              sleep 60
+            done
+            return 1
+          }
+          publier public/data/stats.json public/data/subventions.db
           if [ -f public/data/subventions.json ]; then
-            gh release upload donnees-latest public/data/subventions.json --clobber --repo "$GITHUB_REPOSITORY"
+            publier public/data/subventions.json
           fi
       - name: Déclencher le déploiement Pages
         env:
