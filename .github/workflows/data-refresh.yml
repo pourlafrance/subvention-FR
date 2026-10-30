@@ -26,8 +26,8 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    # Environ 2 h 30 de fonctionnement normal, surtout des appels SIRENE (2,5 s
-    # chacun depuis GitHub Actions) : au-delà de 4 h, il est bloqué.
+    # 1 h à 2 h 30 de fonctionnement normal, surtout des appels SIRENE (0,9 à
+    # 2,5 s chacun depuis GitHub Actions) : au-delà de 4 h, il est bloqué.
     timeout-minutes: 240
     env:
       PYTHONUNBUFFERED: "1"   # logs en direct : un run tué montre où il s'est bloqué

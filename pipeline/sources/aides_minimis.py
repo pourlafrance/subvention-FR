@@ -23,7 +23,7 @@ from ..normalize import make_record, to_float, to_year
 EXPORT_URL = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/aides_minimis/exports/json"
 DATASET_PAGE = "https://data.economie.gouv.fr/explore/dataset/aides_minimis/"
 SOURCE_NAME = "Registre public des aides de minimis (data.economie.gouv.fr)"
-MAX_LOOKUPS = 1500  # ~1 h d'appels par run (2,5 s l'appel en CI) ; le cache SIRENE complète le reste semaine après semaine
+MAX_LOOKUPS = 1500  # 25 à 60 min d'appels par run (0,9 à 2,5 s l'appel en CI) ; le cache SIRENE complète le reste semaine après semaine
 # Catégories juridiques INSEE : 5 sociétés, 6 autres formes commerciales ou
 # coopératives, 8 organismes privés spécialisés, 9 associations et assimilés.
 CATEGORIES_RETENUES = ("5", "6", "8", "9")
