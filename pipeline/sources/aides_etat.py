@@ -1,4 +1,4 @@
-"""Source : aides d'État aux entreprises (> 500 000 €).
+"""Source : aides d'État aux entreprises (> 100 000 €).
 
 Portail Transparency Award Module (TAM) de la Commission européenne. L'export
 n'est pas une API ouverte commode : on ingère un CSV exporté depuis le portail
