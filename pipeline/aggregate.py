@@ -29,6 +29,7 @@ SOURCE_LABELS = {
     "jaune_associations": "Jaune budgétaire (État)",
     "pac": "PAC (FEAGA/FEADER)",
     "aide_etat_entreprise": "Aides d'État (TAM)",
+    "aide_minimis": "Aides de minimis",
     "ue_recherche": "Horizon Europe",
     "agence_ademe": "ADEME",
 }

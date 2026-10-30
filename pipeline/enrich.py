@@ -96,6 +96,36 @@ def _type_sirene(info: dict) -> str | None:
     return None
 
 
+def _interroger(sirens: list[str], cache: dict, stats: dict) -> None:
+    """Complète le cache pour ces SIREN, à débit limité, et compte le résultat."""
+    erreurs_consecutives = 0
+    for siren in sirens:
+        try:
+            cache[siren] = _fetch_siren(siren)
+            stats["appels"] += 1
+            erreurs_consecutives = 0
+            if cache[siren] is None:
+                stats["introuvables"] += 1
+        except Exception:
+            stats["erreurs"] += 1
+            erreurs_consecutives += 1
+            cache.pop(siren, None)  # on retentera au prochain run
+            if erreurs_consecutives >= MAX_ERREURS_CONSECUTIVES:
+                stats["arret_anticipe"] = True
+                break
+        time.sleep(1 / MAX_RPS)
+    _save_cache(cache)
+
+
+def fiches_sirene(sirens: list[str], max_lookups: int) -> tuple[dict, dict]:
+    """Fiches SIRENE de ces SIREN (cache + au plus max_lookups appels), avec les compteurs."""
+    cache = _load_cache()
+    manquants = [s for s in sirens if s not in cache]
+    stats = {"appels": 0, "introuvables": 0, "erreurs": 0, "arret_anticipe": False}
+    _interroger(manquants[:max_lookups], cache, stats)
+    return {s: cache[s] for s in sirens if s in cache}, stats
+
+
 def enrich_all(records: list[dict], max_lookups: int = MAX_LOOKUPS) -> dict:
     """Enrichit records en place. Renvoie les compteurs pour le résumé de run."""
     # SIRENs uniques, classés par volume décroissant : si on plafonne, on
@@ -115,23 +145,7 @@ def enrich_all(records: list[dict], max_lookups: int = MAX_LOOKUPS) -> dict:
              "erreurs": 0, "corrections_type": 0, "ignores_plafond": ignores,
              "arret_anticipe": False}
 
-    erreurs_consecutives = 0
-    for siren in a_interroger:
-        try:
-            cache[siren] = _fetch_siren(siren)
-            stats["appels"] += 1
-            erreurs_consecutives = 0
-            if cache[siren] is None:
-                stats["introuvables"] += 1
-        except Exception:
-            stats["erreurs"] += 1
-            erreurs_consecutives += 1
-            cache.pop(siren, None)  # on retentera au prochain run
-            if erreurs_consecutives >= MAX_ERREURS_CONSECUTIVES:
-                stats["arret_anticipe"] = True
-                break
-        time.sleep(1 / MAX_RPS)
-    _save_cache(cache)
+    _interroger(a_interroger, cache, stats)
 
     for r in records:
         b = r["beneficiaire"]

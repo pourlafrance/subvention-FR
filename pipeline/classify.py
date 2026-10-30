@@ -18,6 +18,7 @@ MAPPING_PATH = os.path.join(os.path.dirname(__file__), "mapping", "programme_cof
 DEFAULTS = {
     "pac": ("04", "Agriculture — PAC"),
     "aide_etat_entreprise": ("04", "Économie — entreprises"),
+    "aide_minimis": ("04", "Économie — entreprises"),
     # Horizon Europe : R&D appliquée aux affaires économiques (COFOG 04.8).
     "ue_recherche": ("04", "Recherche et innovation — UE"),
     # ADEME : protection de l'environnement (COFOG 05) — approximation

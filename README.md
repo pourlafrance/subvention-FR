@@ -45,6 +45,7 @@ unique où chacun peut&nbsp;:
 | Jaune budgétaire (annexe au PLF) | versements de l'État aux associations, par programme budgétaire |
 | ASP | bénéficiaires de la PAC (FEAGA/FEADER), personnes morales uniquement |
 | Commission européenne — TAM | aides d'État aux entreprises > 500 000 € |
+| Registre national de minimis (data.economie.gouv.fr) | petites aides aux entreprises depuis 2026, personnes morales privées |
 | Commission européenne — CORDIS | financements Horizon Europe aux entreprises françaises |
 | ADEME (data.ademe.fr) | aides à la transition écologique, personnes morales privées |
 | INSEE — SIRENE | validation et enrichissement des fiches bénéficiaires |

@@ -83,7 +83,9 @@ et D3 (aides d'État TAM). Le site est **publiable tel quel** (avec sa bannière
   - *Horizon Europe / CORDIS* (nouveau connecteur) : export bulk officiel, 3 265 entreprises FR,
     2,13 Md€, SIREN extrait de la TVA intracommunautaire (98 %).
 - ⬜ **D3** — Brancher les **aides d'État aux entreprises** : automatiser l'export TAM (Commission
-  européenne) et intégrer le futur **registre national « Aides d'État »** (circulaire du 4 mars 2026).
+  européenne ; export nominatif, à écarter pour l'anonymat, reste la pagination, droit de réutilisation
+  à confirmer). Fait : **registre national de minimis** (`pipeline/sources/aides_minimis.py`, licence à
+  confirmer, personnes physiques filtrées par la catégorie juridique SIRENE).
 - ⬜ **D4** — Premier run réel de `data-refresh.yml` → publication de la release `donnees-latest`,
   redéploiement automatique, la bannière démo disparaît. **Débloqué** (P2 fait) — il reste à lancer
   le run et à surveiller durée/mémoire du job (PAC = 1,3 M lignes).
