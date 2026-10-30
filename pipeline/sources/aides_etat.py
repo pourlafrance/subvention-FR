@@ -4,8 +4,8 @@ Portail Transparency Award Module (TAM) de la Commission européenne. L'export
 n'est pas une API ouverte commode : on ingère un CSV exporté depuis le portail
 et déposé dans pipeline/.cache/tam.csv (ou une URL configurée).
 
-À VALIDER (ROADMAP D3) : automatiser l'export TAM, et intégrer le futur registre
-national « Aides d'État » (circulaire du 4 mars 2026) pour les aides de minimis.
+À VALIDER (ROADMAP D3) : automatiser l'export TAM. Les aides de minimis viennent
+du registre national, voir aides_minimis.py.
 """
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ import os
 from . import common
 from ..normalize import make_record, to_float, to_year
 
-SOURCE_NAME = "Aides d'État > 500 k€ — Commission européenne (TAM)"
+SOURCE_NAME = "Aides d'État > 100 k€ — Commission européenne (TAM)"
 LOCAL_CSV = os.path.join(os.path.dirname(__file__), "..", ".cache", "tam.csv")
 
 
