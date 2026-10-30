@@ -27,6 +27,7 @@ CACHE_PATH = os.path.join(os.path.dirname(__file__), ".cache", "entreprises.json
 TIMEOUT = 30
 MAX_RPS = 6          # limite documentée : 7 req/s — on reste dessous
 MAX_LOOKUPS = 2000   # plafond d'appels par run (les plus gros volumes d'abord)
+MAX_ERREURS_CONSECUTIVES = 20  # API en panne : on arrête là, sinon 2000 x 30 s > limite de 6 h du job
 
 # Tranche d'effectifs INSEE -> libellé lisible.
 EFFECTIFS = {
@@ -111,17 +112,24 @@ def enrich_all(records: list[dict], max_lookups: int = MAX_LOOKUPS) -> dict:
     ignores = max(0, len([s for s in sirens if s not in cache]) - max_lookups)
 
     stats = {"total_sirens": len(sirens), "appels": 0, "introuvables": 0,
-             "erreurs": 0, "corrections_type": 0, "ignores_plafond": ignores}
+             "erreurs": 0, "corrections_type": 0, "ignores_plafond": ignores,
+             "arret_anticipe": False}
 
+    erreurs_consecutives = 0
     for siren in a_interroger:
         try:
             cache[siren] = _fetch_siren(siren)
             stats["appels"] += 1
+            erreurs_consecutives = 0
             if cache[siren] is None:
                 stats["introuvables"] += 1
         except Exception:
             stats["erreurs"] += 1
+            erreurs_consecutives += 1
             cache.pop(siren, None)  # on retentera au prochain run
+            if erreurs_consecutives >= MAX_ERREURS_CONSECUTIVES:
+                stats["arret_anticipe"] = True
+                break
         time.sleep(1 / MAX_RPS)
     _save_cache(cache)
 

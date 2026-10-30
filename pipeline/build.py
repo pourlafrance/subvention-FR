@@ -67,6 +67,8 @@ def main() -> int:
         notice(f"Enrichissement SIRENE : {e['total_sirens']} SIREN, {e['appels']} appels, "
                f"{e['corrections_type']} types corrigés, {e['introuvables']} introuvables, "
                f"{e['erreurs']} erreurs, {e['ignores_plafond']} au-delà du plafond")
+        if e["arret_anticipe"]:
+            print(f"::warning::Enrichissement SIRENE arrêté : {e['erreurs']} erreurs, API indisponible ?")
 
     # Dédoublonnage par id (bénéficiaire|année|montant|objet|financeur|ref) :
     # ne fusionne que les lignes STRICTEMENT identiques — typiquement une même

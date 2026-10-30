@@ -26,6 +26,10 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    # Un run normal dure moins d'une heure : au-delà, il est bloqué.
+    timeout-minutes: 120
+    env:
+      PYTHONUNBUFFERED: "1"   # logs en direct : un run tué montre où il s'est bloqué
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
